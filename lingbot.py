@@ -35,13 +35,10 @@ def handle_command(command, channel):
             clarification
     '''
 
-    response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
-        "* comand with numbers, delimited by spaces."
+    response = ("Not sure what you mean. You can ask for my `status` or"
+                " for `next nlprg`")
     print("channel: ", channel)
     print("command: ", command)
-    if command.startswith(EXAMPLE_COMMAND):
-        response = ("I'd love to, but you haven't written any code yet, "
-                    "you idiot")
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
@@ -124,9 +121,7 @@ def passive_check():
 
 
 def restart():
-    os.chdir("nlp-reading-group.wiki/")
     call(["git", "pull"])
-    os.chdir("..")
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
