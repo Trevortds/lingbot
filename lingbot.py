@@ -37,6 +37,7 @@ def handle_command(command, channel):
 
     response = ("Not sure what you mean. You can ask for my `status` or"
                 " for `next nlprg`")
+    print(datetime.datetime.now().isoformat())
     print("channel: ", channel)
     print("command: ", command)
     if command.startswith(STATUS_COMMAND):
@@ -121,6 +122,9 @@ def passive_check():
 
 
 def restart():
+    '''
+    pulls from the github and restarts the script
+    '''
     call(["git", "pull"])
     python = sys.executable
     os.execl(python, python, * sys.argv)
