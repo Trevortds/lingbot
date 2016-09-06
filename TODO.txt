@@ -2,3 +2,10 @@ Make Tyr server
 
 Make hackyhour reminder share photo
 
+Make general schedule format
+	make `next` command able to read the next event from hackyhour or other format
+	make generic reminders 6 hours before an event and 15 minutes before
+
+
+arst
+
