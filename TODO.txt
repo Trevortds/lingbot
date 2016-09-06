@@ -7,5 +7,5 @@ Make general schedule format
 	make generic reminders 6 hours before an event and 15 minutes before
 
 
-arst
+
 
