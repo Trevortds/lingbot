@@ -1,4 +1,5 @@
-Make Tyr server
 
 Make hackyhour reminder share photo
+
+make generic schedule that any kind of event can be added to. 
 
