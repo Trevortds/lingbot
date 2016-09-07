@@ -18,6 +18,7 @@ MEETING_INFO_COMMAND = "next nlprg"
 
 general = "C0AF685U7"
 test_channel = "C25NW0WN7"
+random = "C0AEYNKA4"
 
 # insantiate slack and twilio clients
 # wtf is twilio?
