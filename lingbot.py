@@ -16,8 +16,12 @@ STATUS_COMMAND = "status"
 RESTART_COMMAND = "restart"
 MEETING_INFO_COMMAND = "next nlprg"
 
+channel_codes = {"general":"C0AF685U7",
+                 "bot_test":"C25NW0WN7",
+                 "random":"C0AEYNKA4"}
+
 general = "C0AF685U7"
-test_channel = "C25NW0WN7"
+bot_test = "C25NW0WN7"
 random = "C0AEYNKA4"
 
 # insantiate slack and twilio clients
@@ -131,6 +135,8 @@ def restart():
     os.execl(python, python, * sys.argv)
 
 
+
+
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
@@ -148,3 +154,14 @@ if __name__ == "__main__":
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("connection failed, invalid slack token or bot id?")
+
+
+
+def send_message(channel, message):
+    if channel not in channel_codes.keys():
+        print("channel doesn't exist, please pick from one of these")
+        for key in channel_codes.keys():
+            print(key)
+
+    slack_client.api_call("chat.postMessage", channel=channel_codes[channel],
+                              text=message, as_user=True)

@@ -1,6 +1,11 @@
 
 Make hackyhour reminder share photo
 
+implement end-of-semester cleanout
+	anonymous votes
+	reasonable time period (2 days?)
+	don't record names
+	don't make outcome visible until the end
 
 Make general schedule format
 	make `next` command able to read the next event from hackyhour or other format
