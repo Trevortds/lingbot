@@ -45,7 +45,7 @@ def handle_command(command, channel):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
     if command.startswith(RESTART_COMMAND):
-        response = ("restart comitted at " +
+        response = ("restarting. Ending instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
         slack_client.api_call("chat.postMessage", channel=channel,
                               text=response, as_user=True)
