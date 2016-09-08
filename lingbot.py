@@ -163,5 +163,4 @@ def send_message(channel, message):
         for key in channel_codes.keys():
             print(key)
 
-    slack_client.api_call("chat.postMessage", channel=channel_codes[channel],
-                              text=message, as_user=True)
+    slack_client.api_call("chat.postMessage", channel=channel_codes[channel], text=message, as_user=True)

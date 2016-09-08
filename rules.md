@@ -13,7 +13,7 @@
 
 ## Procedures
 
-1. A quorum for team decision making is two-thirds of the permanent members active on any channel within the last 48 hours. 
+1. A quorum for team decision making is a simple majority of the permanent members active on any channel within the last 48 hours. 
 
 2. A temporary member may be booted by a simple majority
 
