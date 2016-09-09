@@ -15,3 +15,5 @@ Make general schedule format
 Implement Preferential Block Voting
 
 Implement STV/IRV
+
+Implement a hash code for each vote

@@ -5,6 +5,7 @@ import datetime
 import sys
 from subprocess import call
 from schedulereader import meeting
+import ai
 
 
 BOT_ID = os.environ.get("BOT_ID")
@@ -48,19 +49,21 @@ def handle_command(command, channel):
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
-    if command.startswith(RESTART_COMMAND):
+    elif command.startswith(RESTART_COMMAND):
         response = ("restarting. Ending instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
         slack_client.api_call("chat.postMessage", channel=channel,
                               text=response, as_user=True)
         restart()
-    if command.startswith(MEETING_INFO_COMMAND):
+    elif command.startswith(MEETING_INFO_COMMAND):
         response = ("Next meeting info: \n" + next_meeting.firstname + " " +
                     next_meeting.lastname + "\ntopic: \n" +
                     next_meeting.paperinfo +
                     "\ndate: \n" + next_meeting.date.strftime("%m/%d/%y") +
                     "\ncountdown: \n" + str(abs(next_meeting.date -
                                                 datetime.datetime.now())))
+    else:
+        response = ai.humor_handler(command)
 
     slack_client.api_call("chat.postMessage", channel=channel, text=response,
                           as_user=True)
