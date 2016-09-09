@@ -1,14 +1,24 @@
 
 import Hashids
 import datetime
+import hashlib
 
-class ranked_vote:
+
+class vote:
+
+	def generate_hash(self, username, datetime):
+		datestring = datetime.strftime("%A, %d. %B %Y %I:%M%p")
+		choices = " ".join(choices)
+		hashystring = datestring + username + "four score and seven years ago"
+		self.code = hashlib.mb5(hashystring).hexdigest()
+
+class ranked_vote(vote):
 
 	def __init__(self, choices, username,):
 		self.choices = choices
 		self.down_ballot = 0
 		self.top_choice = choices[down_ballot]
-		self.code = self.generate_hash(username, choices, datetime.datetime.now())
+		self.code = self.generate_hash(username, datetime.datetime.now())
 
 
 
@@ -17,17 +27,17 @@ class ranked_vote:
 		self.top_choice = self.choices[down_ballot]
 		return self.top_choice
 
-	def generate_hash(self, username, choices, datetime):
-		hashids = Hashids(salt="four score and seven years ago our forefathers brought fourth on this continent a great nation, concieved in liberty, and dedicated to the proposition that all men are created equal")
-		
 
-class simple_vote:
+class simple_vote(vote):
 
 	def __init__(self, choice):
-		self.choice = choice
+		if type(choice) == int:
+			self.choice = choice
+		elif type(choice) == str:
+			self.choice = int(choice)
 
 
-class preferential_block_vote:
+class preferential_block_vote(vote):
 
 	def __init__(self, first_votes, ranked)
 		self.first_choices = first_votes
@@ -40,8 +50,27 @@ class preferential_block_vote:
 		return self.down_ballot
 
 
+class WrongVoteTypeError(Exception):
+	pass
+
 
 class spartan:
 
 	def __init__(self):
 		# 0 is yes, 1 is no. any 1 votes means failure
+		self.votes = []
+
+	def add(self, vote)
+		if type(vote) != simple_vote:
+			raise WrongVoteTypeError("spartan election requires simple vote")
+		self.votes.add(vote)
+
+	def count(self):
+		for vote in self.votes:
+			if vote.choice = 1
+			return "no"
+
+		return "yes"
+
+
+
