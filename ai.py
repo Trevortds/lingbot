@@ -12,10 +12,18 @@ responses = {
 	"you work?" : "I work with magic",
 	"bots work?" : "Bots work on magic",
 	"what kind" : "The kind your feeble human brain could never hope to grasp",
-
 }
 
-
+gus_messages = [
+	"I love you, Gus",
+	"GHP makes my circuits spin",
+	"All my base are belong to Gus",
+	"<3",
+	"gusgusgusgusgusgusgus",
+	"shut up, Gus (just kidding, I love you)",
+	"01011000 01001111 01011000 01001111",
+	"GHP is electrifying",
+]
 
 def humor_handler(command):
 	keys = responses.keys()
