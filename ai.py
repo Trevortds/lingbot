@@ -27,8 +27,8 @@ gus_messages = [
 
 def humor_handler(command):
 	keys = responses.keys()
-	random.shuffle(keys)
-	for key in keys:
+	random.shuffle(list(keys))
+	for key in list(keys):
 		if key in command:
 			return responses[key]
 
