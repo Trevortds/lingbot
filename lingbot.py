@@ -16,7 +16,9 @@ AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
 STATUS_COMMAND = "status"
 RESTART_COMMAND = "restart"
-MEETING_INFO_COMMAND = "next nlprg"
+MEETING_INFO_COMMAND = "next"
+ADD_EVENT_COMMAND = "add event"
+ELECTION_COMMAND = "election"
 
 channel_codes = {"general":"C0AF685U7",
                  "bot_test":"C25NW0WN7",
@@ -46,7 +48,7 @@ def handle_command(command, channel, user):
     '''
 
     response = ("Not sure what you mean. You can ask for my `status` or"
-                " for `next nlprg`")
+                " for `next`")
     print(datetime.datetime.now().isoformat())
     print("channel: ", channel)
     print("command: ", command)
@@ -60,12 +62,17 @@ def handle_command(command, channel, user):
                               text=response, as_user=True)
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
+        #TODO generic next meeting
         response = ("Next meeting info: \n" + next_meeting.firstname + " " +
                     next_meeting.lastname + "\ntopic: \n" +
                     next_meeting.paperinfo +
                     "\ndate: \n" + next_meeting.date.strftime("%m/%d/%y") +
                     "\ncountdown: \n" + str(abs(next_meeting.date -
                                                 datetime.datetime.now())))
+    elif command.startswith(ADD_EVENT_COMMAND):
+        response = "How did you find this feature? I haven't implemented it yet"
+    elif command.startswith(ELECTION_COMMAND):
+        response = "How did you find this feature? I haven't implemented it yet"
     else:
         response = ai.humor_handler(command)
 
