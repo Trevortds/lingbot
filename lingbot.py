@@ -151,6 +151,7 @@ def restart():
     pulls from the github and restarts the script
     '''
     call(["git", "pull"])
+    time.sleep(5)
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
