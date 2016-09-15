@@ -153,7 +153,7 @@ def restart():
     call(["git", "pull"])
     time.sleep(5)
     python = sys.executable
-    os.execl(python, python, * sys.argv)
+    os.execv(python, python, * sys.argv)
 
 
 
