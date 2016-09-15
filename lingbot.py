@@ -12,7 +12,7 @@ import random
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.1.2"
+version_number = "0.1.3"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -151,7 +151,7 @@ def restart():
     pulls from the github and restarts the script
     '''
     call(["git", "pull"])
-    time.sleep(5)
+    # time.sleep(5)
     python = sys.executable
     os.execv(python, ['python3'] + sys.argv)
 
