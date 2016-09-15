@@ -4,7 +4,7 @@ from slackclient import SlackClient
 import datetime
 import sys
 from subprocess import call
-from schedulereader import meeting
+from nlprgschedulereader import meeting
 import ai
 import random
 
