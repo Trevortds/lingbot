@@ -12,6 +12,8 @@ import random
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
+version_number = 0.1.1
+
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
 STATUS_COMMAND = "status"
@@ -54,7 +56,8 @@ def handle_command(command, channel, user):
     print("command: ", command)
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
-                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
+                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p"))+
+                    "\nVersion Number: " + version_number)
     elif command.startswith(RESTART_COMMAND):
         response = ("restarting. Ending instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")))
