@@ -9,7 +9,7 @@ import ai
 import random
 
 with open("api.txt", 'r') as f:
-    api_token = f.readline()
+    api_token = f.readline()[:-1]
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
