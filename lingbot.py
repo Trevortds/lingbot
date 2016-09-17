@@ -8,7 +8,8 @@ from schedulereader import meeting
 import ai
 import random
 
-
+with open("api.txt", 'r') as f:
+    api_token = f.readline()
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
@@ -35,7 +36,7 @@ gus = "U0AF1RAGZ"
 
 # insantiate slack and twilio clients
 # wtf is twilio?
-slack_client = SlackClient("xoxb-73816173446-K1KCFywSvpmw4Toyrg2eKZGa")
+slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
                 "group/Fall-2016-Reading-Schedule.md")
