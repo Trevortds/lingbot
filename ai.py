@@ -12,8 +12,11 @@ responses = {
 	"you work?" : "I work with magic",
 	"bots work?" : "Bots work on magic",
 	"what kind" : "The kind your feeble human brain could never hope to grasp",
-	"are you" : "yes. duh.",
-	"are you " : "no. duh."
+	"are you" : "rand",
+}
+
+rand = {
+	"are you" : ["yes. duh.", "no. duh."]
 }
 
 gus_messages = [
@@ -36,6 +39,8 @@ def humor_handler(command):
 	random.shuffle(list(keys))
 	for key in list(keys):
 		if key in command:
+			if responses[key] == "rand":
+				return random.shuffle[rand[key]][0]
 			return responses[key]
 
 	return default
