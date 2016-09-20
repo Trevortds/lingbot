@@ -39,4 +39,4 @@ def delete_row()
 
 
 def get_next():
-	
+	with open(filename, newline='') as csvfile

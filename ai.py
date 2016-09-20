@@ -13,7 +13,7 @@ responses = {
 	"bots work?" : "Bots work on magic",
 	"what kind" : "The kind your feeble human brain could never hope to grasp",
 	"are you" : "yes. duh.",
-	"are you" : "no. duh."
+	"are you " : "no. duh."
 }
 
 gus_messages = [
