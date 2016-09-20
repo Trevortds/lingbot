@@ -40,7 +40,7 @@ def humor_handler(command):
 	for key in list(keys):
 		if key in command:
 			if responses[key] == "rand":
-				return random.shuffle[rand[key]][0]
+				return random.shuffle(rand[key])[0]
 			return responses[key]
 
 	return default
