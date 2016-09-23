@@ -1,6 +1,8 @@
 
 Make hackyhour reminder share photo
 
+make status command pull git version number/commit code
+
 implement end-of-semester cleanout
 	anonymous votes
 	reasonable time period (2 days?)
