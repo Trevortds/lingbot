@@ -31,12 +31,11 @@ def add_event(name, time, text):
     time: datetime object for event
     text: text to display when event is ready to go. 
     '''
-    times = datetime.datetime.now()
     with open(filename, 'a', newline='') as csvfile:
         calwriter = csv.writer(csvfile, delimiter=' ',
                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # TODO check for duplicates
-        calwriter.writerow([name, times.isoformat(), text])
+        calwriter.writerow([name, time.isoformat(), text])
 
 
 def get_next():
