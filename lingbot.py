@@ -130,6 +130,8 @@ def passive_check():
     happen at a particular time, put it here, following the template of the
     others
     '''
+    global next_event
+
     send = 0
     now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
