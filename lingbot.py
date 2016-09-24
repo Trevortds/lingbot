@@ -48,7 +48,7 @@ schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
 
 next_event = genericschedulereader.get_next()
 
-def handle_command(command, channel, user):
+def handle_command(command, channel, user, next_nlprg, next_event):
     '''
     recieves commands directed at the bot and tetermines if they are valid
                 commands
@@ -215,7 +215,7 @@ if __name__ == "__main__":
             command, channel, user = parse_slack_output(
                 slack_client.rtm_read())
             if command and channel:
-                handle_command(command, channel, user)
+                handle_command(command, channel, user, next_nlprg, next_event)
             else:
                 passive_check(next_nlprg, next_event)
                 pass
