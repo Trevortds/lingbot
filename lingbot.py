@@ -4,16 +4,19 @@ from slackclient import SlackClient
 import datetime
 import sys
 from subprocess import call
-from schedulereader import meeting
-import ai
 import random
+import re
+
+from nlprgschedulereader import nlprg_meeting
+import ai
+import genericschedulereader
 
 with open("api.txt", 'r') as f:
     api_token = f.readline()[:-1]
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.1.3"
+version_number = "0.2.0"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -33,6 +36,8 @@ random = "C0AEYNKA4"
 
 
 gus = "U0AF1RAGZ"
+
+event_pattern = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 
 # insantiate slack and twilio clients
 # wtf is twilio?
@@ -66,15 +71,30 @@ def handle_command(command, channel, user):
                               text=response, as_user=True)
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
-        # TODO generic next meeting
-        response = ("Next meeting info: \n" + next_meeting.firstname + " " +
-                    next_meeting.lastname + "\ntopic: \n" +
-                    next_meeting.paperinfo +
-                    "\ndate: \n" + next_meeting.date.strftime("%m/%d/%y") +
-                    "\ncountdown: \n" + str(abs(next_meeting.date -
-                                                datetime.datetime.now())))
+        #TODO generic next meeting
+        if "nlprg" in command or next_nlprg.date < next_event.date:
+            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
+                        next_nlprg.lastname + "\ntopic: \n" +
+                        next_nlprg.paperinfo +
+                        "\ndate: \n" + next_nlprg.date.strftime("%m/%d/%y") +
+                        "\ncountdown: \n" + str(abs(next_nlprg.date -
+                                                    datetime.datetime.now())) + 
+                        "\nSchedule here: https://github.com/clulab/nlp-reading"+
+                        "-group/wiki/Fall-2016-Reading-Schedule")
+        else:
+            response = ("Next event: \n" + next_event.name + "\ndate: " +
+                        next_event.date.strftime("%A, %d. %B %Y %H:%M")+
+                        "\nInfo: \n" + next_event.text)
+
     elif command.startswith(ADD_EVENT_COMMAND):
-        response = "How did you find this feature? I haven't implemented it yet"
+        match = re.search(event_pattern, command)
+        if match == None:
+            response = "Syntax: add event \"name\" \"yyyy mm dd hh mm\" \"information\""
+        else:
+            new_date = datetime.datetime.strptime(match.group(2), "%Y %m %d %H %M")
+            genericschedulereader.add_event(match.group(1), new_date, match.group(3))
+            next_event = genericschedulereader.get_next()
+            response = "successfully added"
     elif command.startswith(ELECTION_COMMAND):
         response = "How did you find this feature? I haven't implemented it yet"
     else:
@@ -111,7 +131,7 @@ def passive_check():
     others
     '''
     send = 0
-    now = datetime.datetime.now()
+    now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
         # hacky hour reminder
         response = ("Hacky Hour today, at Frog & Firkin, starting at 1600! "
@@ -119,27 +139,38 @@ def passive_check():
                     " :beers:")
         send = 1
 
-    elif now.date() == next_meeting.date.date() and \
+    elif now.date() == next_nlprg.date.date() and \
             now == now.replace(hour=10, minute=0, second=0):
         # nlprg morning reminder
-        response = ("NLP Reading Group today! \n" + next_meeting.firstname +
-                    "presenting on\n " + next_meeting.paperinfo +
+        response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
+                    " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
-                    "(food and coffee provided)")
+                    "(food and coffee provided)\n\n See full schedule here: " + 
+                    "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
+                    "-2016-Reading-Schedule")
         send = 1
 
-    elif now.date() == next_meeting.date.date() and \
+    elif now.date() == next_nlprg.date.date() and \
             now == now.replace(hour=13, minute=45, second=0):
         # nlprg evening reminder
         response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
                     "\n(food and coffee provided, like for free, so come)\n\n"
                     "Afterwards, join us for drinks at Bear Tracks!")
         send = 1
-    elif now.date() == next_meeting.date.date() and \
+    elif now.date() == next_nlprg.date.date() and \
             now == now.replace(hour=15, minute=0, second=0):
         # nlprg reset
-        next_meeting.refresh()
+        next_nlprg.refresh()
         send = 0
+    elif next_event.date - now == datetime.timedelta(hours=6):
+        response = ("Event Today: " + next_event.name + "\nAt: " + 
+                    next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
+                    next_event.text)
+        send = 1
+    elif next_event.date + datetime.timedelta(seconds=1) == now:
+        response = (next_event.name + "starting now!")
+        global next_event
+        next_event = genericschedulereader.get_next()
 
     if send == 1:
         slack_client.api_call("chat.postMessage", channel=general,
@@ -161,7 +192,8 @@ def restart():
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
-    next_meeting = meeting(schedule_loc)
+    next_nlprg = nlprg_meeting(schedule_loc)
+    next_event = genericschedulereader.get_next()
 
     if slack_client.rtm_connect():
         print("LingBot connected and running")

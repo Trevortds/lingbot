@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class meeting():
+class nlprg_meeting():
     reader_pattern = re.compile(
         r"\|\s*\d+\s*\|\s*(\w+)\s*([\w\s\-\.]*)\s*\|\s*\[(.*?)\]\((.*?)\)(?:\s*<br>\s*\[(.*?)\]\((.*?)\))?\s*\|\s*(\d+)/(\d+)/(\d+)")
     # regex parser for reading schedule table
