@@ -46,6 +46,7 @@ slack_client = SlackClient(api_token)
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
                 "group/Fall-2016-Reading-Schedule.md")
 
+next_event = genericschedulereader.get_next()
 
 def handle_command(command, channel, user):
     '''
