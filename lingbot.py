@@ -73,7 +73,16 @@ def handle_command(command, channel, user):
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
         #TODO generic next meeting
-        if "nlprg" in command or next_nlprg.date < next_event.date:
+        if next_event is None:
+            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
+                        next_nlprg.lastname + "\ntopic: \n" +
+                        next_nlprg.paperinfo +
+                        "\ndate: \n" + next_nlprg.date.strftime("%m/%d/%y") +
+                        "\ncountdown: \n" + str(abs(next_nlprg.date -
+                                                    datetime.datetime.now())) + 
+                        "\nSchedule here: https://github.com/clulab/nlp-reading"+
+                        "-group/wiki/Fall-2016-Reading-Schedule")
+        elif "nlprg" in command or next_nlprg.date < next_event.date:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
                         next_nlprg.lastname + "\ntopic: \n" +
                         next_nlprg.paperinfo +
@@ -89,7 +98,7 @@ def handle_command(command, channel, user):
 
     elif command.startswith(ADD_EVENT_COMMAND):
         match = re.search(event_pattern, command)
-        if match == None:
+        if match is None:
             response = "Syntax: add event \"name\" \"yyyy mm dd hh mm\" \"information\""
         else:
             new_date = datetime.datetime.strptime(match.group(2), "%Y %m %d %H %M")
@@ -125,13 +134,12 @@ def parse_slack_output(slack_rtm_output):
     return None, None, None
 
 
-def passive_check():
+def passive_check(next_nlprg, next_event):
     '''
     This function is run every second. If you have something you want to
     happen at a particular time, put it here, following the template of the
     others
     '''
-    global next_event
 
     send = 0
     now = datetime.datetime.now().replace(microsecond=0)
@@ -148,7 +156,7 @@ def passive_check():
         response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
-                    "(food and coffee provided)\n\n See full schedule here: " + 
+                    "(food and coffee provided)\n\n See full schedule here: "+ 
                     "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
                     "-2016-Reading-Schedule")
         send = 1
@@ -165,15 +173,18 @@ def passive_check():
         # nlprg reset
         next_nlprg.refresh()
         send = 0
-    elif next_event.date - now == datetime.timedelta(hours=6):
-        response = ("Event Today: " + next_event.name + "\nAt: " + 
-                    next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
-                    next_event.text)
-        send = 1
-    elif next_event.date + datetime.timedelta(seconds=1) == now:
-        response = (next_event.name + "starting now!")
-        global next_event
-        next_event = genericschedulereader.get_next()
+
+    elif next_event is not None:
+        if next_event.date - now == datetime.timedelta(hours=6):
+            response = ("Event Today: " + next_event.name + "\nAt: " + 
+                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
+                        next_event.text)
+            send = 1
+        elif next_event.date + datetime.timedelta(seconds=1) == now:
+            response = (next_event.name + "starting now!")
+            next_event = genericschedulereader.get_next()
+            send = 1
+
 
     if send == 1:
         slack_client.api_call("chat.postMessage", channel=general,
@@ -206,7 +217,7 @@ if __name__ == "__main__":
             if command and channel:
                 handle_command(command, channel, user)
             else:
-                passive_check()
+                passive_check(next_nlprg, next_event)
                 pass
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
