@@ -23,9 +23,9 @@ MEETING_INFO_COMMAND = "next"
 ADD_EVENT_COMMAND = "add event"
 ELECTION_COMMAND = "election"
 
-channel_codes = {"general":"C0AF685U7",
-                 "bot_test":"C25NW0WN7",
-                 "random":"C0AEYNKA4"}
+channel_codes = {"general": "C0AF685U7",
+                 "bot_test": "C25NW0WN7",
+                 "random": "C0AEYNKA4"}
 
 general = "C0AF685U7"
 bot_test = "C25NW0WN7"
@@ -57,7 +57,7 @@ def handle_command(command, channel, user):
     print("command: ", command)
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
-                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p"))+
+                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) +
                     "\nVersion Number: " + version_number)
     elif command.startswith(RESTART_COMMAND):
         response = ("restarting. Ending instance started at " +
@@ -66,7 +66,7 @@ def handle_command(command, channel, user):
                               text=response, as_user=True)
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
-        #TODO generic next meeting
+        # TODO generic next meeting
         response = ("Next meeting info: \n" + next_meeting.firstname + " " +
                     next_meeting.lastname + "\ntopic: \n" +
                     next_meeting.paperinfo +
@@ -81,7 +81,8 @@ def handle_command(command, channel, user):
         response = ai.humor_handler(command)
 
     if user == gus:
-        response = response + "\n\n(P.S. " + random.shuffle(ai.gus_messages)[0] + ")"
+        random.shuffle(ai.gus_messages)
+        response = response + "\n\n(P.S. " + ai.gus_messages[0] + ")"
 
     slack_client.api_call("chat.postMessage", channel=channel, text=response,
                           as_user=True)
@@ -157,8 +158,6 @@ def restart():
     os.execv(python, ['python3'] + sys.argv)
 
 
-
-
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
@@ -167,7 +166,8 @@ if __name__ == "__main__":
     if slack_client.rtm_connect():
         print("LingBot connected and running")
         while True:
-            command, channel, user = parse_slack_output(slack_client.rtm_read())
+            command, channel, user = parse_slack_output(
+                slack_client.rtm_read())
             if command and channel:
                 handle_command(command, channel, user)
             else:
@@ -178,11 +178,11 @@ if __name__ == "__main__":
         print("connection failed, invalid slack token or bot id?")
 
 
-
 def send_message(channel, message):
     # if channel not in channel_codes.keys():
     #     print("channel doesn't exist, please pick from one of these")
     #     for key in channel_codes.keys():
     #         print(key)
 
-    slack_client.api_call("chat.postMessage", channel=channel, text=message, as_user=True)
+    slack_client.api_call("chat.postMessage",
+                          channel=channel, text=message, as_user=True)
