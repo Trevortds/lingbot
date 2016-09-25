@@ -56,6 +56,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
             clarification
     '''
 
+
     response = ("Not sure what you mean. You can ask for my `status` or"
                 " for `next`")
     print(datetime.datetime.now().isoformat())
@@ -116,6 +117,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
     slack_client.api_call("chat.postMessage", channel=channel, text=response,
                           as_user=True)
+
+    return next_event
 
 
 def parse_slack_output(slack_rtm_output):
@@ -215,7 +218,7 @@ if __name__ == "__main__":
             command, channel, user = parse_slack_output(
                 slack_client.rtm_read())
             if command and channel:
-                handle_command(command, channel, user, next_nlprg, next_event)
+                next_event = handle_command(command, channel, user, next_nlprg, next_event)
             else:
                 passive_check(next_nlprg, next_event)
                 pass
