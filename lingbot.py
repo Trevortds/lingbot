@@ -32,7 +32,7 @@ channel_codes = {"general":"C0AF685U7",
 
 general = "C0AF685U7"
 bot_test = "C25NW0WN7"
-random = "C0AEYNKA4"
+randomchannel = "C0AEYNKA4"
 
 
 gus = "U0AF1RAGZ"
