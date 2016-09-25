@@ -16,7 +16,7 @@ with open("api.txt", 'r') as f:
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.0"
+version_number = "0.2.1"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -55,6 +55,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     If so, then acts on the commands. If not, returns back what it needs for
             clarification
     '''
+
 
     response = ("Not sure what you mean. You can ask for my `status` or"
                 " for `next`")
@@ -116,6 +117,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
     slack_client.api_call("chat.postMessage", channel=channel, text=response,
                           as_user=True)
+
+    return next_event
 
 
 def parse_slack_output(slack_rtm_output):
@@ -215,7 +218,7 @@ if __name__ == "__main__":
             command, channel, user = parse_slack_output(
                 slack_client.rtm_read())
             if command and channel:
-                handle_command(command, channel, user, next_nlprg, next_event)
+                next_event = handle_command(command, channel, user, next_nlprg, next_event)
             else:
                 passive_check(next_nlprg, next_event)
                 pass
