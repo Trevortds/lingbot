@@ -93,7 +93,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\nSchedule here: https://github.com/clulab/nlp-reading"+
                         "-group/wiki/Fall-2016-Reading-Schedule")
         else:
-            response = ("Next event: \n" + next_event.name + "\ndate: " +
+            response = ("Next event: " + next_event.name + "\ndate: " +
                         next_event.date.strftime("%A, %d. %B %Y %H:%M")+
                         "\nInfo: \n" + next_event.text)
 
@@ -184,7 +184,7 @@ def passive_check(next_nlprg, next_event):
                         next_event.text)
             send = 1
         elif next_event.date + datetime.timedelta(seconds=1) == now:
-            response = (next_event.name + "starting now!")
+            response = (next_event.name + " starting now!")
             next_event = genericschedulereader.get_next()
             send = 1
 
