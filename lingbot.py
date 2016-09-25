@@ -26,9 +26,9 @@ MEETING_INFO_COMMAND = "next"
 ADD_EVENT_COMMAND = "add event"
 ELECTION_COMMAND = "election"
 
-channel_codes = {"general":"C0AF685U7",
-                 "bot_test":"C25NW0WN7",
-                 "random":"C0AEYNKA4"}
+channel_codes = {"general": "C0AF685U7",
+                 "bot_test": "C25NW0WN7",
+                 "random": "C0AEYNKA4"}
 
 general = "C0AF685U7"
 bot_test = "C25NW0WN7"
@@ -46,8 +46,9 @@ slack_client = SlackClient(api_token)
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
                 "group/Fall-2016-Reading-Schedule.md")
 
+next_event = genericschedulereader.get_next()
 
-def handle_command(command, channel, user):
+def handle_command(command, channel, user, next_nlprg, next_event):
     '''
     recieves commands directed at the bot and tetermines if they are valid
                 commands
@@ -62,7 +63,7 @@ def handle_command(command, channel, user):
     print("command: ", command)
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
-                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p"))+
+                    str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) +
                     "\nVersion Number: " + version_number)
     elif command.startswith(RESTART_COMMAND):
         response = ("restarting. Ending instance started at " +
@@ -72,7 +73,16 @@ def handle_command(command, channel, user):
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
         #TODO generic next meeting
-        if "nlprg" in command or next_nlprg.date < next_event.date:
+        if next_event is None:
+            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
+                        next_nlprg.lastname + "\ntopic: \n" +
+                        next_nlprg.paperinfo +
+                        "\ndate: \n" + next_nlprg.date.strftime("%m/%d/%y") +
+                        "\ncountdown: \n" + str(abs(next_nlprg.date -
+                                                    datetime.datetime.now())) + 
+                        "\nSchedule here: https://github.com/clulab/nlp-reading"+
+                        "-group/wiki/Fall-2016-Reading-Schedule")
+        elif "nlprg" in command or next_nlprg.date < next_event.date:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
                         next_nlprg.lastname + "\ntopic: \n" +
                         next_nlprg.paperinfo +
@@ -88,7 +98,7 @@ def handle_command(command, channel, user):
 
     elif command.startswith(ADD_EVENT_COMMAND):
         match = re.search(event_pattern, command)
-        if match == None:
+        if match is None:
             response = "Syntax: add event \"name\" \"yyyy mm dd hh mm\" \"information\""
         else:
             new_date = datetime.datetime.strptime(match.group(2), "%Y %m %d %H %M")
@@ -101,7 +111,8 @@ def handle_command(command, channel, user):
         response = ai.humor_handler(command)
 
     if user == gus:
-        response = response + "\n\n(P.S. " + random.shuffle(ai.gus_messages)[0] + ")"
+        random.shuffle(ai.gus_messages)
+        response = response + "\n\n(P.S. " + ai.gus_messages[0] + ")"
 
     slack_client.api_call("chat.postMessage", channel=channel, text=response,
                           as_user=True)
@@ -123,12 +134,13 @@ def parse_slack_output(slack_rtm_output):
     return None, None, None
 
 
-def passive_check():
+def passive_check(next_nlprg, next_event):
     '''
     This function is run every second. If you have something you want to
     happen at a particular time, put it here, following the template of the
     others
     '''
+
     send = 0
     now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
@@ -144,7 +156,7 @@ def passive_check():
         response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
-                    "(food and coffee provided)\n\n See full schedule here: " + 
+                    "(food and coffee provided)\n\n See full schedule here: "+ 
                     "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
                     "-2016-Reading-Schedule")
         send = 1
@@ -161,15 +173,18 @@ def passive_check():
         # nlprg reset
         next_nlprg.refresh()
         send = 0
-    elif next_event.date - now == datetime.timedelta(hours=6):
-        response = ("Event Today: " + next_event.name + "\nAt: " + 
-                    next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
-                    next_event.text)
-        send = 1
-    elif next_event.date + datetime.timedelta(seconds=1) == now:
-        response = (next_event.name + "starting now!")
-        global next_event
-        next_event = genericschedulereader.get_next()
+
+    elif next_event is not None:
+        if next_event.date - now == datetime.timedelta(hours=6):
+            response = ("Event Today: " + next_event.name + "\nAt: " + 
+                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
+                        next_event.text)
+            send = 1
+        elif next_event.date + datetime.timedelta(seconds=1) == now:
+            response = (next_event.name + "starting now!")
+            next_event = genericschedulereader.get_next()
+            send = 1
+
 
     if send == 1:
         slack_client.api_call("chat.postMessage", channel=general,
@@ -188,8 +203,6 @@ def restart():
     os.execv(python, ['python3'] + sys.argv)
 
 
-
-
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
@@ -199,16 +212,16 @@ if __name__ == "__main__":
     if slack_client.rtm_connect():
         print("LingBot connected and running")
         while True:
-            command, channel, user = parse_slack_output(slack_client.rtm_read())
+            command, channel, user = parse_slack_output(
+                slack_client.rtm_read())
             if command and channel:
-                handle_command(command, channel, user)
+                handle_command(command, channel, user, next_nlprg, next_event)
             else:
-                passive_check()
+                passive_check(next_nlprg, next_event)
                 pass
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("connection failed, invalid slack token or bot id?")
-
 
 
 def send_message(channel, message):
@@ -217,4 +230,5 @@ def send_message(channel, message):
     #     for key in channel_codes.keys():
     #         print(key)
 
-    slack_client.api_call("chat.postMessage", channel=channel, text=message, as_user=True)
+    slack_client.api_call("chat.postMessage",
+                          channel=channel, text=message, as_user=True)

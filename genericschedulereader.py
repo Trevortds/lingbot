@@ -20,8 +20,7 @@ def gt(dt_str):
     '''
     dt, _, us = dt_str.partition(".")
     dt = datetime.datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
-    us = int(us.rstrip("Z"), 10)
-    return dt + datetime.timedelta(microseconds=us)
+    return dt
 
 
 def add_event(name, time, text):
@@ -31,12 +30,11 @@ def add_event(name, time, text):
     time: datetime object for event
     text: text to display when event is ready to go. 
     '''
-    times = datetime.datetime.now()
     with open(filename, 'a', newline='') as csvfile:
         calwriter = csv.writer(csvfile, delimiter=' ',
                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # TODO check for duplicates
-        calwriter.writerow([name, times.isoformat(), text])
+        calwriter.writerow([name, time.isoformat(), text])
 
 
 def get_next():
