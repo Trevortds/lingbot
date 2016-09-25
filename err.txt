@@ -1,0 +1,10 @@
+From https://github.com/Trevortds/lingbot
+   c0c998a..576be84  master     -> origin/master
+error: Your local changes to the following files would be overwritten by merge:
+	lingbot.py
+Please, commit your changes or stash them before you can merge.
+Aborting
+error: Your local changes to the following files would be overwritten by merge:
+	lingbot.py
+Please, commit your changes or stash them before you can merge.
+Aborting
