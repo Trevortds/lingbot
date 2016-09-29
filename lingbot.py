@@ -16,7 +16,7 @@ with open("api.txt", 'r') as f:
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.2"
+version_number = "0.2.3"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
