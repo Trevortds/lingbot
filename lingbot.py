@@ -16,7 +16,7 @@ with open("api.txt", 'r') as f:
 BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.1"
+version_number = "0.2.2"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -193,6 +193,7 @@ def passive_check(next_nlprg, next_event):
         slack_client.api_call("chat.postMessage", channel=general,
                               text=response, as_user=True)
 
+    return next_event
     send = 0  # this should be redundant but just in case. I don't want to spam
 
 

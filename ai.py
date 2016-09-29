@@ -16,7 +16,7 @@ responses = {
 }
 
 rand = {
-    "are you": ["yes. duh.", "no. duh."]
+    "are you": ["yes. duh.", "no. duh.", "yeah, sure.", "nope", "absolutely", "never"]
 }
 
 gus_messages = [
