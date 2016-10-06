@@ -46,7 +46,6 @@ slack_client = SlackClient(api_token)
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
                 "group/Fall-2016-Reading-Schedule.md")
 
-next_event = genericschedulereader.get_next()
 
 def handle_command(command, channel, user, next_nlprg, next_event):
     '''
@@ -148,7 +147,7 @@ def passive_check(next_nlprg, next_event):
     now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
         # hacky hour reminder
-        response = ("Hacky Hour today, at Frog & Firkin, starting at 1600! "
+        response = ("Hacky Hour today, at Gentle Ben's, starting at 1600! "
                     "Come, have a drink, talk to smart people, have fun!"
                     " :beers:")
         send = 1

@@ -21,8 +21,8 @@ responses = {
 }
 
 rand = {
-    "are you": ["yes. duh.", "no. duh.", "yeah, sure.", "nope", "absolutely", "never"]
-    "do you": ["hahaha nice try, that feature was removed ages ago", "yes, I do", "no, I don't"]
+    "are you": ["yes. duh.", "no. duh.", "yeah, sure.", "nope", "absolutely", "never"],
+    "do you": ["hahaha nice try, that feature was removed ages ago", "yes, I do", "no, I don't"],
 
 }
 
