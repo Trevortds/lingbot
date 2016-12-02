@@ -11,9 +11,9 @@ from nlprgschedulereader import nlprg_meeting
 import ai
 import genericschedulereader
 
-with open("api.txt", 'r') as f:
-    api_token = f.readline()[:-1]
-BOT_ID = os.environ.get("BOT_ID")
+
+api_token = os.environ['SLACK_TOKEN']
+# BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
 version_number = "0.2.3"
