@@ -37,7 +37,7 @@ randomchannel = "C0AEYNKA4"
 
 gus = "U0AF1RAGZ"
 
-event_pattern = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
+event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 
 # insantiate slack and twilio clients
 # wtf is twilio?
@@ -55,7 +55,6 @@ def handle_command(command, channel, user, next_nlprg, next_event):
             clarification
     '''
 
-
     response = ("Not sure what you mean. You can ask for my `status` or"
                 " for `next`")
     print(datetime.datetime.now().isoformat())
@@ -72,41 +71,46 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                               text=response, as_user=True)
         restart()
     elif command.startswith(MEETING_INFO_COMMAND):
-        #TODO generic next meeting
+        # TODO generic next meeting
         if next_event is None:
-            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
+            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
+                        " " +
                         next_nlprg.lastname + "\ntopic: \n" +
                         next_nlprg.paperinfo +
                         "\ndate: \n" + next_nlprg.date.strftime("%m/%d/%y") +
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
-                                                    datetime.datetime.now())) + 
-                        "\nSchedule here: https://github.com/clulab/nlp-reading"+
-                        "-group/wiki/Fall-2016-Reading-Schedule")
+                                                    datetime.datetime.now())) +
+                        "\nSchedule here: https://github.com/clulab/nlp-read" +
+                        "ing-group/wiki/Fall-2016-Reading-Schedule")
         elif "nlprg" in command or next_nlprg.date < next_event.date:
-            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname + " " +
+            response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
+                        " " +
                         next_nlprg.lastname + "\ntopic: \n" +
                         next_nlprg.paperinfo +
                         "\ndate: \n" + next_nlprg.date.strftime("%m/%d/%y") +
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
-                                                    datetime.datetime.now())) + 
-                        "\nSchedule here: https://github.com/clulab/nlp-reading"+
-                        "-group/wiki/Fall-2016-Reading-Schedule")
+                                                    datetime.datetime.now())) +
+                        "\nSchedule here: https://github.com/clulab/nlp-read" +
+                        "ing-group/wiki/Fall-2016-Reading-Schedule")
         else:
             response = ("Next event: " + next_event.name + "\ndate: " +
-                        next_event.date.strftime("%A, %d. %B %Y %H:%M")+
+                        next_event.date.strftime("%A, %d. %B %Y %H:%M") +
                         "\nInfo: \n" + next_event.text)
 
     elif command.startswith(ADD_EVENT_COMMAND):
-        match = re.search(event_pattern, command)
+        match = re.search(event_patt, command)
         if match is None:
-            response = "Syntax: add event \"name\" \"yyyy mm dd hh mm\" \"information\""
+            response = ("Syntax: add event \"name\" \"yyyy mm dd hh mm\" " +
+                        "\"information\"")
         else:
-            new_date = datetime.datetime.strptime(match.group(2), "%Y %m %d %H %M")
-            genericschedulereader.add_event(match.group(1), new_date, match.group(3))
+            new_date = datetime.datetime.strptime(match.group(2),
+                                                  "%Y %m %d %H %M")
+            genericschedulereader.add_event(match.group(1), new_date,
+                                            match.group(3))
             next_event = genericschedulereader.get_next()
             response = "successfully added"
     elif command.startswith(ELECTION_COMMAND):
-        response = "How did you find this feature? I haven't implemented it yet"
+        response = "How did you find this feature? I didn't implement it yet"
     else:
         response = ai.humor_handler(command)
 
@@ -158,7 +162,7 @@ def passive_check(next_nlprg, next_event):
         response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
-                    "(food and coffee provided)\n\n See full schedule here: "+ 
+                    "(food and coffee provided)\n\nSee full schedule here: " +
                     "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
                     "-2016-Reading-Schedule")
         send = 1
@@ -178,15 +182,14 @@ def passive_check(next_nlprg, next_event):
 
     elif next_event is not None:
         if next_event.date - now == datetime.timedelta(hours=6):
-            response = ("Event Today: " + next_event.name + "\nAt: " + 
-                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
+            response = ("Event Today: " + next_event.name + "\nAt: " +
+                        next_event.date.strftime("%H:%M") + "\n\nInfo: " +
                         next_event.text)
             send = 1
         elif next_event.date + datetime.timedelta(seconds=1) == now:
             response = (next_event.name + " starting now!")
             next_event = genericschedulereader.get_next()
             send = 1
-
 
     if send == 1:
         slack_client.api_call("chat.postMessage", channel=general,
@@ -218,7 +221,8 @@ if __name__ == "__main__":
             command, channel, user = parse_slack_output(
                 slack_client.rtm_read())
             if command and channel:
-                next_event = handle_command(command, channel, user, next_nlprg, next_event)
+                next_event = handle_command(command, channel, user,
+                                            next_nlprg, next_event)
             else:
                 passive_check(next_nlprg, next_event)
                 pass

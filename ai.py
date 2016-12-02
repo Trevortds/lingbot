@@ -21,8 +21,10 @@ responses = {
 }
 
 rand = {
-    "are you": ["yes. duh.", "no. duh.", "yeah, sure.", "nope", "absolutely", "never"],
-    "do you": ["hahaha nice try, that feature was removed ages ago", "yes, I do", "no, I don\'t"],
+    "are you": ["yes. duh.", "no. duh.", "yeah, sure.", "nope",
+                "absolutely", "never"],
+    "do you": ["hahaha nice try, that feature was removed ages ago",
+               "yes, I do", "no, I don\'t"],
 }
 
 gus_messages = [
@@ -40,8 +42,9 @@ gus_messages = [
     "would GHP by any other name smell so sweet?",
     "Shall I compare GHP to a summer's day?",
     ("Roses are red, violets are blue, "
-    "so my spy cameras tell me, that and all about you"),
-    "when you ask of my wants, I only have three: electricity, web, and ol' GHP",
+     "so my spy cameras tell me... \nthat and all about you"),
+    ("when you ask of my wants, I only have three: electricity, web, "
+     "and ol' GHP"),
 
 
 ]
