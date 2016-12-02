@@ -1,12 +1,12 @@
 name: lingbot
 description:
 email: trevortds@email.arizona.edu
-avatar: .beepboop/inorout-icon.png
-background: .beepboop/inorout-bg.png
+avatar: 
+background: 
 screenshots:
-  - screenshot: .beepboop/screenshot1.png
-  - screenshot: .beepboop/screenshot2.png
-  - screenshot: .beepboop/inorout-long.gif
+  - screenshot: 
+  - screenshot: 
+  - screenshot: 
 slackscopes:
   - bot
   - commands
