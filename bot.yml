@@ -1,0 +1,13 @@
+name: lingbot
+description:
+email: trevortds@email.arizona.edu
+avatar: 
+background: 
+screenshots:
+  - screenshot: 
+  - screenshot: 
+  - screenshot: 
+slackscopes:
+  - bot
+  - commands
+  - reactions:write
