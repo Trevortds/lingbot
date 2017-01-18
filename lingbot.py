@@ -44,7 +44,7 @@ event_pattern = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
-                "group/Fall-2016-Reading-Schedule.md")
+                "group/Spring-2017-Reading-Schedule.md")
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -177,7 +177,7 @@ def passive_check(next_nlprg, next_event):
         send = 0
 
     elif next_event is not None:
-        if next_event.date - now == datetime.timedelta(hours=6):
+        if next_event.date - now == datetime.timedelta(hours=5, minutes=30):
             response = ("Event Today: " + next_event.name + "\nAt: " + 
                         next_event.date.strftime("%H:%M") + "\n\nInfo: "+ 
                         next_event.text)
