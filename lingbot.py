@@ -18,7 +18,7 @@ with open("api.txt", 'r') as f:
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.4"
+version_number = "0.2.5"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -83,7 +83,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Fall-2016-Reading-Schedule")
+                        "ing-group/wiki/Spring-2017-Reading-Schedule")
         elif "nlprg" in command or next_nlprg.date < next_event.date:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
                         " " +
@@ -93,7 +93,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Fall-2016-Reading-Schedule")
+                        "ing-group/wiki/Spring-2017-Reading-Schedule")
         else:
             response = ("Next event: " + next_event.name + "\ndate: " +
                         next_event.date.strftime("%A, %d. %B %Y %H:%M") +
@@ -165,8 +165,8 @@ def passive_check(next_nlprg, next_event):
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
                     "(food and coffee provided)\n\nSee full schedule here: " +
-                    "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
-                    "-2016-Reading-Schedule")
+                    "https://github.com/clulab/nlp-reading-group/wiki/Spring" +
+                    "-2017-Reading-Schedule")
         send = 1
 
     elif now.date() == next_nlprg.date.date() and \
