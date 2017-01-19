@@ -18,7 +18,7 @@ with open("api.txt", 'r') as f:
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.3"
+version_number = "0.2.4"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -46,7 +46,7 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
-                "group/Fall-2016-Reading-Schedule.md")
+                "group/Spring-2017-Reading-Schedule.md")
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -183,9 +183,10 @@ def passive_check(next_nlprg, next_event):
         send = 0
 
     elif next_event is not None:
-        if next_event.date - now == datetime.timedelta(hours=6):
+        if next_event.date - now == datetime.timedelta(hours=5, minutes=30):
             response = ("Event Today: " + next_event.name + "\nAt: " +
-                        next_event.date.strftime("%H:%M") + "\n\nInfo: " +
+                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+
+
                         next_event.text)
             send = 1
         elif next_event.date + datetime.timedelta(seconds=1) == now:
