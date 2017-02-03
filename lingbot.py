@@ -202,7 +202,7 @@ def passive_check(next_nlprg, next_event):
         # nlprg evening reminder
         response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
                     "\n(food and coffee provided, like for free, so come)\n\n"
-                    "Afterwards, join us for drinks at Bear Tracks!")
+                    "")
         send = 1
     elif now.date() == next_nlprg.date.date() and \
             now == now.replace(hour=15, minute=0, second=0):
