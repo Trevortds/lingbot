@@ -46,7 +46,7 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
-                "group/Fall-2016-Reading-Schedule.md")
+                "group/Spring-2017-Reading-Schedule.md")
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -93,7 +93,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Fall-2016-Reading-Schedule")
+                        "ing-group/wiki/Spring-2017-Reading-Schedule")
         elif "nlprg" in command or next_nlprg.date < next_event.date:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
                         " " +
@@ -103,7 +103,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Fall-2016-Reading-Schedule")
+                        "ing-group/wiki/Spring-2017-Reading-Schedule")
         else:
             response = ("Next event: " + next_event.name + "\ndate: " +
                         next_event.date.strftime("%A, %d. %B %Y %H:%M") +
@@ -177,8 +177,8 @@ def passive_check(next_nlprg, next_event):
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
                     "(food and coffee provided)\n\nSee full schedule here: " +
-                    "https://github.com/clulab/nlp-reading-group/wiki/Fall" +
-                    "-2016-Reading-Schedule")
+                    "https://github.com/clulab/nlp-reading-group/wiki/Spring" +
+                    "-2017-Reading-Schedule")
         send = 1
 
     elif now.date() == next_nlprg.date.date() and \
@@ -195,9 +195,10 @@ def passive_check(next_nlprg, next_event):
         send = 0
 
     elif next_event is not None:
-        if next_event.date - now == datetime.timedelta(hours=6):
+        if next_event.date - now == datetime.timedelta(hours=5, minutes=30):
             response = ("Event Today: " + next_event.name + "\nAt: " +
-                        next_event.date.strftime("%H:%M") + "\n\nInfo: " +
+                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+
+
                         next_event.text)
             send = 1
         elif next_event.date + datetime.timedelta(seconds=1) == now:
