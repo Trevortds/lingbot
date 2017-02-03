@@ -75,8 +75,6 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                           as_user=True)
 
         return next_event
-    else:
-        return next_event
 
     if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
@@ -155,7 +153,8 @@ def parse_slack_output(slack_rtm_output):
                 # return text after the @ mention, whitespace removed
                 return output['text'].split(AT_BOT)[1].strip().lower(), \
                     output['channel'], output['user']
-            elif output and 'text' in output and ("scala" or "python" in output['text']):
+            elif (output and 'text' in output and 
+                    ("scala" in output['text'] or "python" in output['text'])):
                 return output['text'].strip().lower(), output['channel'], output['user']
     return None, None, None
 
