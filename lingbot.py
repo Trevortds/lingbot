@@ -62,11 +62,15 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                 " for `next`")
     print(datetime.datetime.now().isoformat())
     print("channel: ", channel)
+    print("user: ", user)
     print("command: ", command)
 
     # strip colon
     if command.startswith(":"):
         command = command[1:]
+
+    if user == BOT_ID:
+        return next_event
 
     # adding note about scala channel
     if (("python" in command or "scala" in command) and channel != "\#scala" 
@@ -130,7 +134,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     elif command.startswith(ELECTION_COMMAND):
         response = "How did you find this feature? I didn't implement it yet"
     elif command.startswith(HELP_COMMAND):
-        response = ("You can ask for my `status`\n or `add event`, or `next` "+
+        response = ("You can ask for my `status`\n`add event`\nor `next` "+
                     "with the optional argument `nlprg`")
 
     else:
