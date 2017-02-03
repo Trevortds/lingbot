@@ -1,8 +1,7 @@
 import random
 
 
-default = ("Not sure what you mean. You can ask for my `status` or"
-           " for `next` (with the optional argument `nlprg`)")
+default = ("Not sure what you mean. (use `help` for list of commands)")
 
 
 responses = {

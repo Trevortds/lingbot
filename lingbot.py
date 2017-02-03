@@ -27,6 +27,7 @@ RESTART_COMMAND = "restart"
 MEETING_INFO_COMMAND = "next"
 ADD_EVENT_COMMAND = "add event"
 ELECTION_COMMAND = "election"
+HELP_COMMAND = "help"
 
 channel_codes = {"general": "C0AF685U7",
                  "bot_test": "C25NW0WN7",
@@ -77,7 +78,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
         return next_event
 
-    if command.startswith(STATUS_COMMAND):
+    elif command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) +
                     "\nVersion Number: " + version_number)
@@ -128,6 +129,10 @@ def handle_command(command, channel, user, next_nlprg, next_event):
             response = "successfully added"
     elif command.startswith(ELECTION_COMMAND):
         response = "How did you find this feature? I didn't implement it yet"
+    elif command.startswith(HELP_COMMAND):
+        response = "You can ask for my `status`\n or `add event`, or `next` "+
+                    "with the optional argument `nlprg`"
+
     else:
         response = ai.humor_handler(command)
 
