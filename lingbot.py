@@ -63,11 +63,12 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     print(datetime.datetime.now().isoformat())
     print("channel: ", channel)
     print("user: ", user)
-    print("command: ", command)
+    print("command: '", command, "'")
 
     # strip colon
     if command.startswith(":"):
         command = command[1:]
+        print("stripped command: '", command, "'")
 
     if user == BOT_ID:
         return next_event
