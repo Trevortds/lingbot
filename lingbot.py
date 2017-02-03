@@ -78,7 +78,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     else:
         return next_event
 
-    elif command.startswith(STATUS_COMMAND):
+    if command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) +
                     "\nVersion Number: " + version_number)
