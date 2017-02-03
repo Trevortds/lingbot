@@ -67,7 +67,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
     # strip colon
     if command.startswith(":"):
-        command = command[1:]
+        command = command[2:]
         print("stripped command: '", command, "'")
 
     if user == BOT_ID:
