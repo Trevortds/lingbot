@@ -130,8 +130,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     elif command.startswith(ELECTION_COMMAND):
         response = "How did you find this feature? I didn't implement it yet"
     elif command.startswith(HELP_COMMAND):
-        response = "You can ask for my `status`\n or `add event`, or `next` "+
-                    "with the optional argument `nlprg`"
+        response = ("You can ask for my `status`\n or `add event`, or `next` "+
+                    "with the optional argument `nlprg`")
 
     else:
         response = ai.humor_handler(command)
