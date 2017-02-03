@@ -18,7 +18,7 @@ with open("api.txt", 'r') as f:
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-version_number = "0.2.3"
+version_number = "0.2.5"
 
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "do"
@@ -62,7 +62,17 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     print(datetime.datetime.now().isoformat())
     print("channel: ", channel)
     print("command: ", command)
-    if command.startswith(STATUS_COMMAND):
+
+    # strip colon
+    if command.startswith(":"):
+        command = command[1:]
+
+    # adding note about scala channel
+    if ("python" in command or "scala" in command) and channel != "\#scala":
+        response = "Reminder: \#scala exists for conversation about programming!"
+        
+
+    elif command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
                     str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) +
                     "\nVersion Number: " + version_number)
@@ -139,6 +149,8 @@ def parse_slack_output(slack_rtm_output):
                 # return text after the @ mention, whitespace removed
                 return output['text'].split(AT_BOT)[1].strip().lower(), \
                     output['channel'], output['user']
+            elif output and 'text' in output and ("scala" or "python" in output['text']):
+                return output['text'].strip().lower(), output['channel'], output['user']
     return None, None, None
 
 
@@ -153,7 +165,7 @@ def passive_check(next_nlprg, next_event):
     now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
         # hacky hour reminder
-        response = ("Hacky Hour today, at Gentle Ben's, starting at 1600! "
+        response = ("Hacky Hour today, at Pasco, starting at 1600! "
                     "Come, have a drink, talk to smart people, have fun!"
                     " :beers:")
         send = 1
