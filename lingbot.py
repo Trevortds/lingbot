@@ -71,6 +71,12 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     if ("python" in command or "scala" in command) and channel != "\#scala":
         response = "Reminder: \#scala exists for conversation about programming!"
         
+        slack_client.api_call("chat.postMessage", channel=channel, text=response,
+                          as_user=True)
+
+        return next_event
+    else:
+        return next_event
 
     elif command.startswith(STATUS_COMMAND):
         response = ("present instance started at " +
