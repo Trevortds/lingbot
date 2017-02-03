@@ -68,7 +68,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
         command = command[1:]
 
     # adding note about scala channel
-    if ("python" in command or "scala" in command) and channel != "\#scala":
+    if (("python" in command or "scala" in command) and channel != "\#scala" 
+            and user != BOT_ID):
         response = "Reminder: \#scala exists for conversation about programming!"
         
         slack_client.api_call("chat.postMessage", channel=channel, text=response,
