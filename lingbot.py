@@ -76,10 +76,13 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     # adding note about scala channel
     if (("python" in command or "scala" in command) and channel != "\#scala" 
             and user != BOT_ID):
-        response = "Reminder: \#scala exists for conversation about programming!"
+
+        # temporarily disabling until I can make this smarter
         
-        slack_client.api_call("chat.postMessage", channel=channel, text=response,
-                          as_user=True)
+        # response = "Reminder: \#scala exists for conversation about programming!"
+        
+        # slack_client.api_call("chat.postMessage", channel=channel, text=response,
+        #                   as_user=True)
 
         return next_event
 
