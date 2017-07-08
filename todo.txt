@@ -1,3 +1,2 @@
-hacky hour location
-colons
-scala listener
+finish voting module
+add gus's reccomendation (github issue)
