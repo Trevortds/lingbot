@@ -1,0 +1,14 @@
+# This is the default config. If you want to change something for a 
+# particular instance, make a config-custom.yml in the same folder. 
+features:
+  hackyHourReminder:
+    active: True
+    location: Pasco
+    time: 1600
+# TODO Figure out how to get default behavior, esp for channels.
+# make a default yml that is common to all versions, and an unversioned
+# yml that overrides
+channels:
+  restricted: True
+  allowed:
+    - \#bottest

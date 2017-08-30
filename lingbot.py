@@ -6,6 +6,7 @@ import sys
 from subprocess import call
 import random
 import re
+import yaml
 
 from nlprgschedulereader import nlprg_meeting
 import ai
@@ -17,6 +18,9 @@ with open("api.txt", 'r') as f:
     api_token = f.readline()[:-1]
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
+
+with open("config.yml", "r") as yamlfile:
+    cfg = yaml.load(yamlfile)
 
 version_number = "0.2.6"
 
@@ -70,7 +74,12 @@ def handle_command(command, channel, user, next_nlprg, next_event):
         command = command[2:]
         print("stripped command: '", command, "'")
 
+    # don't talk to yourself
     if user == BOT_ID:
+        return next_event
+
+    # check allowable channel
+    if cfg["channels"]["restricted"] and not channel in cfg["channels"]["allowed"]:
         return next_event
 
     # adding note about scala channel
@@ -184,9 +193,10 @@ def passive_check(next_nlprg, next_event):
     now = datetime.datetime.now().replace(microsecond=0)
     if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
         # hacky hour reminder
-        response = ("Hacky Hour today, at Pasco, starting at 1600! "
+        response = ("Hacky Hour today, at {0.location}, starting at {0.time}! "
                     "Come, have a drink, talk to smart people, have fun!"
-                    " :beers:")
+                    " :beers:").format(cfg['features']['hackyHourReminder'])
+        # TODO add switch to not send if not cfg.feature.hackyHourReminder.active
         send = 1
 
     elif now.date() == next_nlprg.date.date() and \
@@ -225,7 +235,7 @@ def passive_check(next_nlprg, next_event):
             next_event = genericschedulereader.get_next()
             send = 1
 
-    if send == 1:
+    if send == 1 and not cfg["channels"]["restricted"]:
         slack_client.api_call("chat.postMessage", channel=general,
                               text=response, as_user=True)
 
@@ -243,6 +253,15 @@ def restart():
     os.execv(python, ['python3'] + sys.argv)
 
 
+
+def send_message(channel, message):
+    # if channel not in channel_codes.keys():
+    #     print("channel doesn't exist, please pick from one of these")
+    #     for key in channel_codes.keys():
+    #         print(key)
+
+    slack_client.api_call("chat.postMessage",
+                          channel=channel, text=message, as_user=True)
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
@@ -264,12 +283,3 @@ if __name__ == "__main__":
     else:
         print("connection failed, invalid slack token or bot id?")
 
-
-def send_message(channel, message):
-    # if channel not in channel_codes.keys():
-    #     print("channel doesn't exist, please pick from one of these")
-    #     for key in channel_codes.keys():
-    #         print(key)
-
-    slack_client.api_call("chat.postMessage",
-                          channel=channel, text=message, as_user=True)
