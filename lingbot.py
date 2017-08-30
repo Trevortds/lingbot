@@ -8,9 +8,10 @@ import random
 import re
 import yaml
 
-from nlprgschedulereader import nlprg_meeting
-import ai
-import genericschedulereader
+from features.nlprgschedulereader import nlprg_meeting
+import features.ai
+import features.genericschedulereader
+import features.ai
 
 
 # api_token = os.environ['SLACK_TOKEN']
@@ -50,8 +51,7 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 # wtf is twilio?
 slack_client = SlackClient(api_token)
 
-schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
-                "group/Spring-2017-Reading-Schedule.md")
+schedule_loc = cfg["features"]["nlprgReminder"]["url"]
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -105,8 +105,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
         slack_client.api_call("chat.postMessage", channel=channel,
                               text=response, as_user=True)
         restart()
+
     elif command.startswith(MEETING_INFO_COMMAND):
-        # TODO generic next meeting
         if next_event is None:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
                         " " +
@@ -163,24 +163,6 @@ def handle_command(command, channel, user, next_nlprg, next_event):
     return next_event
 
 
-def parse_slack_output(slack_rtm_output):
-    '''
-    The slack real time messaging API is an events firehose.
-    This parsing function returns none unless a message is directed
-    at the bot based on its id
-    '''
-    output_list = slack_rtm_output
-    if output_list and len(output_list) > 0:
-        for output in output_list:
-            if output and 'text' in output and AT_BOT in output['text']:
-                # return text after the @ mention, whitespace removed
-                return output['text'].split(AT_BOT)[1].strip().lower(), \
-                    output['channel'], output['user']
-            elif (output and 'text' in output and 
-                    ("scala" in output['text'] or "python" in output['text'])):
-                return output['text'].strip().lower(), output['channel'], output['user']
-    return None, None, None
-
 
 def passive_check(next_nlprg, next_event):
     '''
@@ -188,6 +170,7 @@ def passive_check(next_nlprg, next_event):
     happen at a particular time, put it here, following the template of the
     others
     '''
+    nlprg_remind_time = cfg["features"]["nlprgReminder"]["time"]
 
     send = 0
     now = datetime.datetime.now().replace(microsecond=0)
@@ -200,7 +183,7 @@ def passive_check(next_nlprg, next_event):
         send = 1
 
     elif now.date() == next_nlprg.date.date() and \
-            now == now.replace(hour=10, minute=0, second=0):
+            now == now.replace(hour=nlprg_remind_time, minute=0, second=0):
         # nlprg morning reminder
         response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
                     " presenting on\n " + next_nlprg.paperinfo +
@@ -262,6 +245,26 @@ def send_message(channel, message):
 
     slack_client.api_call("chat.postMessage",
                           channel=channel, text=message, as_user=True)
+
+def parse_slack_output(slack_rtm_output):
+    '''
+    The slack real time messaging API is an events firehose.
+    This parsing function returns none unless a message is directed
+    at the bot based on its id
+    '''
+    output_list = slack_rtm_output
+    if output_list and len(output_list) > 0:
+        for output in output_list:
+            if output and 'text' in output and AT_BOT in output['text']:
+                # return text after the @ mention, whitespace removed
+                return output['text'].split(AT_BOT)[1].strip().lower(), \
+                    output['channel'], output['user']
+            elif (output and 'text' in output and 
+                    ("scala" in output['text'] or "python" in output['text'])):
+                return output['text'].strip().lower(), output['channel'], output['user']
+    return None, None, None
+
+
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()

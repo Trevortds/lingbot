@@ -4,7 +4,12 @@ features:
   hackyHourReminder:
     active: True
     location: Pasco
-    time: 1600
+    time: 16
+  nlprgReminder:
+    active: True
+    url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Spring-2017-Reading-Schedule.md"
+    time: 10
+
 # TODO Figure out how to get default behavior, esp for channels.
 # make a default yml that is common to all versions, and an unversioned
 # yml that overrides

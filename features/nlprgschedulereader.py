@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 
 
 class nlprg_meeting():
-    reader_pattern = re.compile(
-        r"\|\s*\d+\s*\|\s*(\w+)\s*([\w\s\-\.]*)\s*\|\s*\[(.*?)\]\((.*?)\)(?:\s*<br>\s*\[(.*?)\]\((.*?)\))?\s*\|\s*(\d+)/(\d+)/(\d+)")
+    reader_pattern = 
+        r"\|\s*\d+\s*\|\s*(\w+)\s*([\w\s\-\.]*)\s*\|\s*\[(.*?)\]\((.*?)\)(?:\s*<br>\s*\[(.*?)\]\((.*?)\))?\s*\|\s*(\d+)/(\d+)/(\d+)"
     # regex parser for reading schedule table
     # matches lines of the form
     # |1 | Firstname lastname | [nameofpaper](link) | m/d/y | GS 906 |
@@ -22,7 +22,7 @@ class nlprg_meeting():
     # 6. day
     # 7. year
 
-    def __init__(self, schedule_loc):
+    def __init__(self, schedule_loc, reader_pattern=self.reader_pattern):
         '''
         creates a meeting based on the information in the
             schedule file provided
@@ -31,6 +31,7 @@ class nlprg_meeting():
         # with open(schedule_loc, 'r') as schedule_file:
         #     self.schedule_text = schedule_file.read()
         # declare instance variables (groups)
+        self.reader_regex = re.compile(reader_pattern)
         self.schedule_loc = schedule_loc
         self.firstname = ''
         self.lastname = ''
@@ -51,7 +52,7 @@ class nlprg_meeting():
         req = requests.get(self.schedule_loc)
         self.schedule_text = str(BeautifulSoup(req.text,))
 
-        for m in re.finditer(self.reader_pattern, self.schedule_text):
+        for m in re.finditer(self.reader_regex, self.schedule_text):
             self.year = int(m.group(9))
             self.month = int(m.group(7))
             self.day = int(m.group(8))
