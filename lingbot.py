@@ -47,7 +47,7 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
 slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
-                "group/Spring-2017-Reading-Schedule.md")
+                "group/FALL-2017-Reading-Schedule.md")
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
