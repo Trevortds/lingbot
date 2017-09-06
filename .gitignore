@@ -1,6 +1,9 @@
 #project-specific files
 api.txt
 generic_schedule.csv
+err.txt
+log.txt
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
