@@ -3,7 +3,7 @@ api.txt
 generic_schedule.csv
 err.txt
 log.txt
-
+*.pem
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
