@@ -207,7 +207,7 @@ def passive_check(next_nlprg, next_event):
                     "\n(food and coffee provided, like for free, so come)\n\n"
                     "")
         send = 1
-    elif now.date() == next_nlprg.date.date() and \
+    elif now.date() == next_nlprg.date and \
             now == now.replace(hour=15, minute=0, second=0):
         # nlprg reset
         next_nlprg.refresh()
