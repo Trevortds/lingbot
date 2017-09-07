@@ -40,7 +40,7 @@ randomchannel = "C0AEYNKA4"
 
 gus = "U0AF1RAGZ"
 
-event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"(.*)\""
+event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"([\s\S]*)\""
 
 # insantiate slack and twilio clients
 # wtf is twilio?
