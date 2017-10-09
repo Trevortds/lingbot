@@ -55,6 +55,10 @@ slack_client = SlackClient(api_token)
 
 schedule_loc = ("https://raw.githubusercontent.com/wiki/clulab/nlp-reading-"
                 "group/Fall-2017-Reading-Schedule.md")
+READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
+start_time = datetime.datetime.now()
+next_nlprg = nlprg_meeting(schedule_loc)
+next_event = genericschedulereader.get_next()
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
