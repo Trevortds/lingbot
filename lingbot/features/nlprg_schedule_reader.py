@@ -70,3 +70,50 @@ class nlprg_meeting():
                         m.group(5) + "\nLink: " + m.group(6) + "\n"
 
                 break
+
+class Reminder():
+
+    def __init__(self, config):
+        self.active = config["active"]
+        self.url = config["url"]
+        self.remind_time = config["time"]
+        self.next_nlprg = nlprg_meeting(self.url)
+
+    def check(self):
+        if not self.active:
+            return None
+        else:
+            now = datetime.datetime.now().replace(microsecond=0)
+            if now.date() == self.next_nlprg.date.date() and \
+                now == now.replace(hour=self.remind_time, minute=0, second=0):
+                # nlprg morning reminder
+                response = ("NLP Reading Group today! \n" + self.next_nlprg.firstname +
+                            " presenting on\n " + self.next_nlprg.paperinfo +
+                            "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
+                            "(food and coffee provided)\n\nSee full schedule here: " +
+                            "https://github.com/clulab/nlp-reading-group/wiki/FALL" +
+                            "-2017-Reading-Schedule")
+                return response, True
+
+            elif now.date() == self.next_nlprg.date.date() and \
+                    now == now.replace(hour=13, minute=45, second=0):
+                # nlprg evening reminder
+                response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
+                            "\n(food and coffee provided, like for free, so come)\n\n"
+                            "")
+                return response, True
+
+            elif now.date() == self.next_nlprg.date and \
+                    now == now.replace(hour=15, minute=0, second=0):
+                # nlprg reset
+                self.next_nlprg.refresh()
+                return None
+
+            if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
+                # hacky hour reminder
+                response = ("Hacky Hour today, at {}, starting at {}! "
+                            "Come, have a drink, talk to smart people, have fun!"
+                            " :beers:").format(self.location, self.time)
+                return response, True
+            else:
+                return None

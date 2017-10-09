@@ -9,9 +9,10 @@ import re
 import yaml
 
 
-from lingbot.features.nlprgschedulereader import nlprg_meeting
+from lingbot.features.nlprg_schedule_reader import nlprg_meeting
 from lingbot.features import ai
-from lingbot.features import genericschedulereader
+from lingbot.features import generic_schedule_reader
+from lingbot import passive_feats
 
 
 try:
@@ -58,12 +59,14 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"([\s\S]*)\
 # wtf is twilio?
 slack_client = SlackClient(api_token)
 
-schedule_loc = cfg["features"]["nlprgReminder"]["url"]
+schedule_loc = cfg["features"]["passive"]["nlprgReminder"]["url"]
 
 READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
 start_time = datetime.datetime.now()
 next_nlprg = nlprg_meeting(schedule_loc)
-next_event = genericschedulereader.get_next()
+
+meeting_filename = cfg["features"]["passive"]["genericReminder"]["filename"]
+next_event = generic_schedule_reader.get_next(meeting_filename)
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -92,6 +95,8 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
     # check allowable channel
     if cfg["channels"]["restricted"] and not channel in cfg["channels"]["allowed"]:
+        print("stopped because of restricted channel")
+        print(channel)
         return next_event
 
     # adding note about scala channel
@@ -152,9 +157,10 @@ def handle_command(command, channel, user, next_nlprg, next_event):
         else:
             new_date = datetime.datetime.strptime(match.group(2),
                                                   "%Y %m %d %H %M")
-            genericschedulereader.add_event(match.group(1), new_date,
+            generic_schedule_reader.add_event(meeting_filename, match.group(1), new_date,
                                             match.group(3))
-            next_event = genericschedulereader.get_next()
+            next_event = generic_schedule_reader.get_next(meeting_filename)
+            print(next_event)
             response = "successfully added"
     elif command.startswith(ELECTION_COMMAND):
         response = "How did you find this feature? I didn't implement it yet"
@@ -174,68 +180,6 @@ def handle_command(command, channel, user, next_nlprg, next_event):
 
     return next_event
 
-
-
-def passive_check(next_nlprg, next_event):
-    '''
-    This function is run every second. If you have something you want to
-    happen at a particular time, put it here, following the template of the
-    others
-    '''
-    nlprg_remind_time = cfg["features"]["nlprgReminder"]["time"]
-
-    send = 0
-    now = datetime.datetime.now().replace(microsecond=0)
-    if now.weekday() == 3 and now == now.replace(hour=13, minute=0, second=0):
-        # hacky hour reminder
-        response = ("Hacky Hour today, at {0.location}, starting at {0.time}! "
-                    "Come, have a drink, talk to smart people, have fun!"
-                    " :beers:").format(cfg['features']['hackyHourReminder'])
-        # TODO add switch to not send if not cfg.feature.hackyHourReminder.active
-        send = 1
-
-    elif now.date() == next_nlprg.date.date() and \
-            now == now.replace(hour=nlprg_remind_time, minute=0, second=0):
-        # nlprg morning reminder
-        response = ("NLP Reading Group today! \n" + next_nlprg.firstname +
-                    " presenting on\n " + next_nlprg.paperinfo +
-                    "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
-                    "(food and coffee provided)\n\nSee full schedule here: " +
-                    "https://github.com/clulab/nlp-reading-group/wiki/FALL" +
-                    "-2017-Reading-Schedule")
-        send = 1
-
-    elif now.date() == next_nlprg.date and \
-            now == now.replace(hour=13, minute=45, second=0):
-        # nlprg evening reminder
-        response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
-                    "\n(food and coffee provided, like for free, so come)\n\n"
-                    "")
-        send = 1
-    elif now.date() == next_nlprg.date and \
-            now == now.replace(hour=15, minute=0, second=0):
-        # nlprg reset
-        next_nlprg.refresh()
-        send = 0
-
-    elif next_event is not None:
-        if next_event.date - now == datetime.timedelta(hours=5, minutes=30):
-            response = ("Event Today: " + next_event.name + "\nAt: " +
-                        next_event.date.strftime("%H:%M") + "\n\nInfo: "+
-
-                        next_event.text)
-            send = 1
-        elif next_event.date + datetime.timedelta(seconds=1) == now:
-            response = (next_event.name + " starting now!")
-            next_event = genericschedulereader.get_next()
-            send = 1
-
-    if send == 1 and not cfg["channels"]["restricted"]:
-        slack_client.api_call("chat.postMessage", channel=general,
-                              text=response, as_user=True)
-
-    return next_event
-    send = 0  # this should be redundant but just in case. I don't want to spam
 
 
 def restart():
@@ -281,7 +225,8 @@ def main(test = False):
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
     next_nlprg = nlprg_meeting(schedule_loc)
-    next_event = genericschedulereader.get_next()
+    next_event = generic_schedule_reader.get_next(meeting_filename)
+    passive = passive_feats.Passive(slack_client, cfg["features"]["passive"])
 
     if slack_client.rtm_connect():
         print("LingBot connected and running")
@@ -292,8 +237,7 @@ def main(test = False):
                 next_event = handle_command(command, channel, user,
                                             next_nlprg, next_event)
             else:
-                passive_check(next_nlprg, next_event)
-                pass
+                passive.check()
             time.sleep(READ_WEBSOCKET_DELAY)
             if test:
                 return True

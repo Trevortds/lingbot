@@ -1,7 +1,6 @@
 import csv
 import datetime
 
-filename = "generic_schedule.csv"
 
 # TODO make cleanup algorithm that eliminates events before the present by
 # clearing the csv and repopulating it
@@ -23,7 +22,7 @@ def gt(dt_str):
     return dt
 
 
-def add_event(name, time, text):
+def add_event(filename, name, time, text):
     '''
     arguments:
     name: name of event
@@ -34,10 +33,10 @@ def add_event(name, time, text):
         calwriter = csv.writer(csvfile, delimiter=' ',
                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # TODO check for duplicates
-        calwriter.writerow([name, time.isoformat(), text])
+        print(calwriter.writerow([name, time.isoformat(), text]))
 
 
-def get_next():
+def get_next(filename):
     try:
         with open(filename, newline='') as csvfile:
             schedulereader = csv.reader(csvfile, delimiter=' ', quotechar='|')
@@ -63,3 +62,31 @@ def get_next():
         return None
 
     
+class Reminder():
+    def __init__(self, config):
+        self.active = config["active"]
+        self.hours_before = config["hoursBefore"]
+        self.filename = config["filename"]
+        self.next_event = get_next(self.filename)
+
+    def check(self):
+        if not self.active:
+            return None
+        else:
+            now = datetime.datetime.now().replace(microsecond=0)
+            
+
+            if self.next_event is not None:
+                if self.next_event.date - now == datetime.timedelta(hours=self.hours_before):
+                    response = ("Event Today: " + self.next_event.name + "\nAt: " +
+                                self.next_event.date.strftime("%H:%M") + "\n\nInfo: "+
+
+                                self.next_event.text)
+                    return response, True
+                elif self.next_event.date + datetime.timedelta(seconds=1) == now:
+                    response = (self.next_event.name + " starting now!")
+                    self.next_event = get_next(self.filename)
+                    return response, True
+
+            else:
+                return None

@@ -1,14 +1,20 @@
 # This is the default config. If you want to change something for a 
 # particular instance, make a config-custom.yml in the same folder. 
 features:
-  hackyHourReminder:
-    active: True
-    location: Pasco
-    time: 16
-  nlprgReminder:
-    active: True
-    url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/FALL-2017-Reading-Schedule.md"
-    time: 10
+  passive:
+    hackyHourReminder:
+      active: True
+      location: Pasco
+      time: 16
+    nlprgReminder:
+      active: True
+      url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
+      time: 10
+    genericReminder:
+      active: True
+      hoursBefore: 6
+      filename: "generic_schedule.csv"
+  active:
 
 # TODO Figure out how to get default behavior, esp for channels.
 # make a default yml that is common to all versions, and an unversioned
@@ -17,3 +23,4 @@ channels:
   restricted: True
   allowed:
     - \#bottest
+    - C25NW0WN7
