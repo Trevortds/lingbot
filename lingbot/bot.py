@@ -7,9 +7,9 @@ from subprocess import call
 import random
 import re
 
-from nlprgschedulereader import nlprg_meeting
-import ai
-import genericschedulereader
+from lingbot.nlprgschedulereader import nlprg_meeting
+from lingbot import ai
+from lingbot import genericschedulereader
 
 
 # api_token = os.environ['SLACK_TOKEN']
@@ -242,8 +242,7 @@ def restart():
     python = sys.executable
     os.execv(python, ['python3'] + sys.argv)
 
-
-if __name__ == "__main__":
+def main(test = False):
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
     next_nlprg = nlprg_meeting(schedule_loc)
@@ -261,8 +260,16 @@ if __name__ == "__main__":
                 passive_check(next_nlprg, next_event)
                 pass
             time.sleep(READ_WEBSOCKET_DELAY)
+            if test:
+                return True
     else:
         print("connection failed, invalid slack token or bot id?")
+        return False
+
+
+if __name__ == "__main__":
+    main()
+
 
 
 def send_message(channel, message):

@@ -4,8 +4,7 @@ python:
   - "3.5"
   - "3.6"
 
-before_install:
-  - sudo apt-get install llvm-3.8
+
 install:
   - pip install -r requirements.txt
 

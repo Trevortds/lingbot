@@ -40,7 +40,10 @@ def add_event(name, time, text):
 def get_next():
     with open(filename, newline='') as csvfile:
         schedulereader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-        soonest = next(schedulereader)
+        try:
+            soonest = next(schedulereader)
+        except StopIteration:
+            return None
         soonest_time = gt(soonest[1])
         while soonest_time < datetime.datetime.now():
             try:
