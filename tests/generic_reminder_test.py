@@ -12,7 +12,7 @@ DATE_GENERATOR = lambda y, m, d: datetime.date(y, m, d)
 
 config = {
 "active": True, 
-"filename": "resources/generic_schedule.csv",  
+"filename": "tests/resources/generic_schedule.csv",  
 "hoursBefore": 6
 }
 

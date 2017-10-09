@@ -60,7 +60,7 @@ def get_next(filename):
                         soonest_time = time
             return meeting(soonest[0], soonest_time, soonest[2])
     except FileNotFoundError:
-        return None
+        return 4
 
 
 
