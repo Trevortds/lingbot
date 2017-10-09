@@ -12,9 +12,16 @@ from lingbot import ai
 from lingbot import genericschedulereader
 
 
-# api_token = os.environ['SLACK_TOKEN']
-with open("api.txt", 'r') as f:
-    api_token = f.readline()[:-1]
+try:
+    with open("api.txt", 'r') as f:
+        api_token = f.readline()[:-1]
+except FileNotFoundError:
+    api_token = os.environ['SLACK_TOKEN']
+
+if api_token == "":
+    print("NO API TOKEN FOUND")
+    sys.exit(1)
+
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 

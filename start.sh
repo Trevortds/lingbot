@@ -5,7 +5,7 @@ while true; do
 	then
 		true
 	else
-		python3 /home/ubuntu/lingbot/lingbot.py > log.txt 2> err.txt &
+		python3 ./lingbot/bot.py &
 	fi
 	sleep 1
 done
