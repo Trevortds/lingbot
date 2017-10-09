@@ -9,7 +9,7 @@ class NextEvent:
     class __NextEvent:
         config = {}
         def __init__(self, config):
-            self.config = config
+            self.config = config 
             self.update()
         def update(self):
             self.next_generic = generic_schedule_reader.get_next(self.config["filename"])
