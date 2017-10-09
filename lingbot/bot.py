@@ -28,8 +28,12 @@ if api_token == "":
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
-with open("config.yml", "r") as yamlfile:
-    cfg = yaml.load(yamlfile)
+try:
+    with open("config.yml", "r") as yamlfile:
+        cfg = yaml.load(yamlfile)
+except FileNotFoundError:
+    with open("default-config.yml", "r") as yamlfile:
+        cfg = yaml.load(yamlfile)
 
 version_number = cfg["version"]
 
