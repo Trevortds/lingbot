@@ -43,7 +43,7 @@ class nlprg_meeting():
         self.year = 0
         # declare instance variables (other)
         self.paperinfo = ''
-        self.date = datetime.date.today()  # this is soon overwritten
+        self.date = datetime.datetime.today()  # this is soon overwritten
         # initialize instance variables
         self.refresh()
 
