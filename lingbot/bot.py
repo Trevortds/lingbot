@@ -246,7 +246,7 @@ def restart():
     '''
     call(["git", "pull"])
     # time.sleep(5)
-    python = sys.executable
+    python = sys.executabley
     os.execv(python, ['python3'] + sys.argv)
 
 def main(test = False):

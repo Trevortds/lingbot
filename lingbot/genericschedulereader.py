@@ -41,24 +41,25 @@ def get_next():
     try:
         with open(filename, newline='') as csvfile:
             schedulereader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+            try:
+                soonest = next(schedulereader)
+            except StopIteration:
+                return None
+            soonest_time = gt(soonest[1])
+            while soonest_time < datetime.datetime.now():
+                try:
+                    soonest = next(schedulereader)
+                except:
+                    return None
+                soonest_time = gt(soonest[1])
+            for row in schedulereader:
+                time = gt(row[1])
+                if time > datetime.datetime.now():
+                    if time < soonest_time:
+                        soonest = row
+                        soonest_time = time
+            return meeting(soonest[0], soonest_time, soonest[2])
     except FileNotFoundError:
         return None
 
-    try:
-        soonest = next(schedulereader)
-    except StopIteration:
-        return None
-    soonest_time = gt(soonest[1])
-    while soonest_time < datetime.datetime.now():
-        try:
-            soonest = next(schedulereader)
-        except:
-            return None
-        soonest_time = gt(soonest[1])
-    for row in schedulereader:
-        time = gt(row[1])
-        if time > datetime.datetime.now():
-            if time < soonest_time:
-                soonest = row
-                soonest_time = time
-    return meeting(soonest[0], soonest_time, soonest[2])
+    
