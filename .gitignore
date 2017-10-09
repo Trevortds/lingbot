@@ -4,6 +4,7 @@ generic_schedule.csv
 err.txt
 log.txt
 *.pem
+config.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
