@@ -8,15 +8,22 @@ import random
 import re
 import yaml
 
-from features.nlprgschedulereader import nlprg_meeting
-import features.ai
-import features.genericschedulereader
-import features.ai
+
+from lingbot.features.nlprgschedulereader import nlprg_meeting
+from lingbot.features import ai
+from lingbot.features import genericschedulereader
 
 
-# api_token = os.environ['SLACK_TOKEN']
-with open("api.txt", 'r') as f:
-    api_token = f.readline()[:-1]
+try:
+    with open("api.txt", 'r') as f:
+        api_token = f.readline()[:-1]
+except FileNotFoundError:
+    api_token = os.environ['SLACK_TOKEN']
+
+if api_token == "":
+    print("NO API TOKEN FOUND")
+    sys.exit(1)
+
 # BOT_ID = os.environ.get("BOT_ID")
 BOT_ID = "U25Q053D4"
 
@@ -52,6 +59,11 @@ event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"([\s\S]*)\
 slack_client = SlackClient(api_token)
 
 schedule_loc = cfg["features"]["nlprgReminder"]["url"]
+
+READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
+start_time = datetime.datetime.now()
+next_nlprg = nlprg_meeting(schedule_loc)
+next_event = genericschedulereader.get_next()
 
 
 def handle_command(command, channel, user, next_nlprg, next_event):
@@ -116,7 +128,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Spring-2017-Reading-Schedule")
+                        "ing-group/wiki/FALL-2017-Reading-Schedule")
         elif "nlprg" in command or next_nlprg.date < next_event.date:
             response = ("Next NLPRG meeting info: \n" + next_nlprg.firstname +
                         " " +
@@ -126,7 +138,7 @@ def handle_command(command, channel, user, next_nlprg, next_event):
                         "\ncountdown: \n" + str(abs(next_nlprg.date -
                                                     datetime.datetime.now())) +
                         "\nSchedule here: https://github.com/clulab/nlp-read" +
-                        "ing-group/wiki/Spring-2017-Reading-Schedule")
+                        "ing-group/wiki/FALL-2017-Reading-Schedule")
         else:
             response = ("Next event: " + next_event.name + "\ndate: " +
                         next_event.date.strftime("%A, %d. %B %Y %H:%M") +
@@ -189,18 +201,18 @@ def passive_check(next_nlprg, next_event):
                     " presenting on\n " + next_nlprg.paperinfo +
                     "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
                     "(food and coffee provided)\n\nSee full schedule here: " +
-                    "https://github.com/clulab/nlp-reading-group/wiki/Spring" +
+                    "https://github.com/clulab/nlp-reading-group/wiki/FALL" +
                     "-2017-Reading-Schedule")
         send = 1
 
-    elif now.date() == next_nlprg.date.date() and \
+    elif now.date() == next_nlprg.date and \
             now == now.replace(hour=13, minute=45, second=0):
         # nlprg evening reminder
         response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
                     "\n(food and coffee provided, like for free, so come)\n\n"
                     "")
         send = 1
-    elif now.date() == next_nlprg.date.date() and \
+    elif now.date() == next_nlprg.date and \
             now == now.replace(hour=15, minute=0, second=0):
         # nlprg reset
         next_nlprg.refresh()
@@ -265,7 +277,7 @@ def parse_slack_output(slack_rtm_output):
     return None, None, None
 
 
-if __name__ == "__main__":
+def main(test = False): 
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
     next_nlprg = nlprg_meeting(schedule_loc)
@@ -283,6 +295,14 @@ if __name__ == "__main__":
                 passive_check(next_nlprg, next_event)
                 pass
             time.sleep(READ_WEBSOCKET_DELAY)
+            if test:
+                return True
     else:
         print("connection failed, invalid slack token or bot id?")
+        return False
+
+
+if __name__ == "__main__":
+    main()
+
 
