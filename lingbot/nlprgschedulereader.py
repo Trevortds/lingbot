@@ -43,13 +43,14 @@ class nlprg_meeting():
         self.year = 0
         # declare instance variables (other)
         self.paperinfo = ''
-        self.date = datetime.date.today()  # this is soon overwritten
+        self.date = datetime.datetime.today()  # this is soon overwritten
         # initialize instance variables
         self.refresh()
 
     def refresh(self):
         req = requests.get(self.schedule_loc)
-        self.schedule_text = str(BeautifulSoup(req.text,))
+        self.schedule_text = str(BeautifulSoup(req.text, "lxml"))
+
 
         for m in re.finditer(self.reader_pattern, self.schedule_text):
             self.year = int(m.group(9))
