@@ -2,6 +2,7 @@ import pytest
 
 from lingbot import passive_feats
 from slackclient import SlackClient
+import os
 
 def test_constructor():
     try:
