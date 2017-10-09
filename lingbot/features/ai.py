@@ -16,7 +16,7 @@ responses = {
     "know": "I know everything",
     "do you": "rand",
     "tree": ":tree:",
-
+    "introduce yourself": "I am lingbot, human-linguist relations",
 }
 
 rand = {
