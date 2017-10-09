@@ -1,9 +1,11 @@
 import csv
 import datetime
-
+from lingbot.features import next_event_tracker
+import re
 
 # TODO make cleanup algorithm that eliminates events before the present by
 # clearing the csv and repopulating it
+event_patt = "add event \"(.*)\" \"(\d\d\d\d \d\d \d\d \d\d \d\d)\" \"([\s\S]*)\""
 
 
 class meeting:
@@ -35,7 +37,6 @@ def add_event(filename, name, time, text):
         # TODO check for duplicates
         print(calwriter.writerow([name, time.isoformat(), text]))
 
-
 def get_next(filename):
     try:
         with open(filename, newline='') as csvfile:
@@ -61,13 +62,37 @@ def get_next(filename):
     except FileNotFoundError:
         return None
 
+
+
+
+class EventAdder():
+    def __init__(self, config):
+        self.config = config
+    def handle(self, command, channel, user):
+        match = re.search(event_patt, command)
+        if match is None:
+            response = ("Syntax: add event \"name\" \"yyyy mm dd hh mm\" " +
+                        "\"information\"")
+        else:
+            new_date = datetime.datetime.strptime(match.group(2),
+                                                  "%Y %m %d %H %M")
+            add_event(self.config["filename"], match.group(1), new_date,
+                                            match.group(3))
+            next_event_tracker.NextEvent().update()
+            
+            response = "successfully added"
+        return response
+        
+
+
+
     
 class Reminder():
     def __init__(self, config):
         self.active = config["active"]
         self.hours_before = config["hoursBefore"]
         self.filename = config["filename"]
-        self.next_event = get_next(self.filename)
+        self.next_generic = get_next(self.filename)
 
     def check(self):
         if not self.active:
@@ -76,16 +101,17 @@ class Reminder():
             now = datetime.datetime.now().replace(microsecond=0)
             
 
-            if self.next_event is not None:
-                if self.next_event.date - now == datetime.timedelta(hours=self.hours_before):
-                    response = ("Event Today: " + self.next_event.name + "\nAt: " +
-                                self.next_event.date.strftime("%H:%M") + "\n\nInfo: "+
+            if self.next_generic is not None:
+                if self.next_generic.date - now == datetime.timedelta(hours=self.hours_before):
+                    response = ("Event Today: " + self.next_generic.name + "\nAt: " +
+                                self.next_generic.date.strftime("%H:%M") + "\n\nInfo: "+
 
-                                self.next_event.text)
+                                self.next_generic.text)
                     return response, True
-                elif self.next_event.date + datetime.timedelta(seconds=1) == now:
-                    response = (self.next_event.name + " starting now!")
-                    self.next_event = get_next(self.filename)
+                elif self.next_generic.date + datetime.timedelta(seconds=1) == now:
+                    response = (self.next_generic.name + " starting now!")
+                    self.next_generic = get_next(self.filename)
+                    next_event_tracker.NextEvent().update()
                     return response, True
 
             else:

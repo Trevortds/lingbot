@@ -25,6 +25,9 @@ features:
       active: True
       command: "add event"
       filename: "generic_schedule.csv"
+    help:
+      active: True
+      command: "help"
 
 
 

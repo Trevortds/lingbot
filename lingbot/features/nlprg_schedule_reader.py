@@ -20,8 +20,21 @@ class nlprg_meeting():
     # 5. month
     # 6. day
     # 7. year
+    schedule_loc = "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
+    firstname = ''
+    lastname = ''
+    papername = ''
+    paperlink = ''
+    papername2 = ''
+    paperlink2 = ''
+    month = 0
+    day = 0
+    year = 0
+        # declare instance variables (other)
+    paperinfo = ''
+    date = datetime.datetime.today()  # this is soon overwritten
 
-    def __init__(self, schedule_loc, reader_pattern=reader_pattern):
+    def __init__(self, schedule_loc=schedule_loc, reader_pattern=reader_pattern):
         '''
         creates a meeting based on the information in the
             schedule file provided
@@ -35,9 +48,9 @@ class nlprg_meeting():
         self.firstname = ''
         self.lastname = ''
         self.papername = ''
-        self.link = ''
+        self.paperlink = ''
         self.papername2 = ''
-        self.link2 = ''
+        self.paperlink2 = ''
         self.month = 0
         self.day = 0
         self.year = 0

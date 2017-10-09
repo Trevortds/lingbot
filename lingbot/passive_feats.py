@@ -15,6 +15,8 @@ randomchannel = "C0AEYNKA4"
 class Passive():
 
     def __init__(self, slack_client, config):
+        config = config["features"]["passive"]
+        self.config = config
         self.reminder_objects = []
         for feat in config:
             self.reminder_objects.append(constructors[feat](config[feat]))
