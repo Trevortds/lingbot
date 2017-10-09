@@ -6,6 +6,8 @@ log.txt
 *.pem
 config.yml
 
+!tests/resources/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
