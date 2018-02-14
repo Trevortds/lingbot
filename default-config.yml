@@ -25,7 +25,6 @@ features:
       active: True
       command: "add event"
       filename: "generic_schedule.csv"
- 
 
 
 
@@ -37,3 +36,4 @@ channels:
   allowed:
     - \#bottest
     - C25NW0WN7
+

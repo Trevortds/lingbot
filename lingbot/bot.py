@@ -87,6 +87,7 @@ def parse_slack_output(slack_rtm_output):
                     output['channel'], output['user']
             elif (output and 'text' in output and
                     ("scala" in output['text'] or "python" in output['text'])):
+                return None, None, None
                 return output['text'].strip().lower(), output['channel'], output['user']
     return None, None, None
 
