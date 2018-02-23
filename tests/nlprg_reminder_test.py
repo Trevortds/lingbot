@@ -12,7 +12,7 @@ DATE_GENERATOR = lambda y, m, d: datetime.date(y, m, d)
 config = {
 "active": True,
 "url": "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md",
-"time": 10
+"time": 10,
 "room": "Gould-Simpson 906"
 }
 
