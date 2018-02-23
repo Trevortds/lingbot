@@ -12,6 +12,7 @@ features:
       active: True
       url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
       time: 10
+      room: "Gould-Simpson 856"
     genericReminder:
       active: True
       hoursBefore: 6

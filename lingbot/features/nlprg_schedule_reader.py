@@ -90,6 +90,7 @@ class Reminder():
         self.active = config["active"]
         self.url = config["url"]
         self.remind_time = config["time"]
+        self.classroom = config["room"]
         self.next_nlprg = nlprg_meeting(self.url)
 
     def check(self):
@@ -102,7 +103,7 @@ class Reminder():
                 # nlprg morning reminder
                 response = ("NLP Reading Group today! \n" + self.next_nlprg.firstname +
                             " presenting on\n " + self.next_nlprg.paperinfo +
-                            "\n\n Join us in Gould-Simpson 906 at 1400\n\n" +
+                            "\n\n Join us in "+self.classroom+" at 1400\n\n" +
                             "(food and coffee provided)\n\nSee full schedule here: " +
                             "https://github.com/clulab/nlp-reading-group/wiki/FALL" +
                             "-2017-Reading-Schedule")
