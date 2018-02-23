@@ -85,13 +85,14 @@ def parse_slack_output(slack_rtm_output):
                 # return text after the @ mention, whitespace removed
                 return output['text'].split(AT_BOT)[1].strip().lower(), \
                     output['channel'], output['user']
-            elif (output and 'text' in output and 
+            elif (output and 'text' in output and
                     ("scala" in output['text'] or "python" in output['text'])):
+                return None, None, None
                 return output['text'].strip().lower(), output['channel'], output['user']
     return None, None, None
 
 
-def main(test = False): 
+def main(test = False):
     READ_WEBSOCKET_DELAY = 1  # 1 second delay between reading from firehose
     start_time = datetime.datetime.now()
     next_nlprg = nlprg_meeting(schedule_loc)
@@ -120,6 +121,11 @@ def main(test = False):
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        try:
+            main()
+        except e:
+            print("Error!")
+            print(e)
 
 
