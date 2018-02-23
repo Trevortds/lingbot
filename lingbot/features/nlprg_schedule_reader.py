@@ -112,7 +112,7 @@ class Reminder():
             elif now.date() == self.next_nlprg.date.date() and \
                     now == now.replace(hour=13, minute=45, second=0):
                 # nlprg evening reminder
-                response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
+                response = ("NLP Reading Group happening NOW! :book: "+self.classroom
                             "\n(food and coffee provided, like for free, so come)\n\n"
                             "")
                 return response, True
