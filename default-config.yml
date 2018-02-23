@@ -1,6 +1,6 @@
-# This is the default config. If you want to change something for a 
-# particular instance, make a config-custom.yml in the same folder. 
-version: 1.0
+# This is the default config. If you want to change something for a
+# particular instance, make a config-custom.yml in the same folder.
+version: 1.1
 
 features:
   passive:
@@ -12,6 +12,7 @@ features:
       active: True
       url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
       time: 10
+      room: "Gould-Simpson 856"
     genericReminder:
       active: True
       hoursBefore: 6

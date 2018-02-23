@@ -102,7 +102,9 @@ def main(test = False):
 
     if slack_client.rtm_connect():
         print("LingBot connected and running")
-        send_message(bot_test, "Lingbot started at " + str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) + "\n version " + str(version_number))
+        if "pytest" not in sys.modules:
+            # do this only if you're not testing. got really spammy. 
+            send_message(bot_test, "Lingbot started at " + str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) + "\n version " + str(version_number))
         while True:
             command, channel, user = parse_slack_output(
                 slack_client.rtm_read())
