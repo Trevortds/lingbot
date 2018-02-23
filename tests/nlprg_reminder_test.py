@@ -3,16 +3,17 @@ from lingbot.features import nlprg_schedule_reader
 import datetime
 import bs4
 
-FAKE_TIME_FAIL = datetime.datetime(2017, 10, 6, 12, 0, 0) 
+FAKE_TIME_FAIL = datetime.datetime(2017, 10, 6, 12, 0, 0)
 FAKE_TIME_MORNING = datetime.datetime(2017, 10, 6, 10, 0, 0)
-FAKE_TIME_LAST_MINUTE = datetime.datetime(2017, 10, 6, 13, 45, 0) 
-FAKE_TIME_RESET = datetime.datetime(2017, 10, 6, 15, 0, 0) 
+FAKE_TIME_LAST_MINUTE = datetime.datetime(2017, 10, 6, 13, 45, 0)
+FAKE_TIME_RESET = datetime.datetime(2017, 10, 6, 15, 0, 0)
 DATE_GENERATOR = lambda y, m, d: datetime.date(y, m, d)
 
 config = {
-"active": True, 
-"url": "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md",  
-"time": 10
+"active": True,
+"url": "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md",
+"time": 10,
+"room": "Gould-Simpson 906"
 }
 
 
