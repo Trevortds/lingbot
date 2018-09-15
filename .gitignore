@@ -1,3 +1,6 @@
+.idea/**
+.idea
+
 #project-specific files
 api.txt
 generic_schedule.csv
