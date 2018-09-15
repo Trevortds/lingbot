@@ -1,5 +1,7 @@
 import os
 import time
+
+import requests
 from slackclient import SlackClient
 import datetime
 import sys
@@ -7,13 +9,16 @@ from subprocess import call
 import random
 import re
 import yaml
+import logging
 
+from slackclient._server import SlackConnectionError
 
 from lingbot.features.nlprg_schedule_reader import nlprg_meeting
 from lingbot.features import ai
 from lingbot.features import generic_schedule_reader
 from lingbot import passive_feats, active_feats
 
+logging.getLogger().setLevel(logging.INFO)
 
 try:
     with open("api.txt", 'r') as f:
@@ -101,13 +106,42 @@ def main(test = False):
     active = active_feats.Active(slack_client, cfg)
 
     if slack_client.rtm_connect():
-        print("LingBot connected and running")
+        logging.info("LingBot connected and running")
+        timeout = 1
+
         if "pytest" not in sys.modules:
             # do this only if you're not testing. got really spammy. 
             send_message(bot_test, "Lingbot started at " + str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) + "\n version " + str(version_number))
         while True:
-            command, channel, user = parse_slack_output(
-                slack_client.rtm_read())
+            if timeout != 1:
+                send_message(bot_test, "Something went wrong, please check the logs")
+            try:
+                command, channel, user = parse_slack_output(
+                    slack_client.rtm_read())
+            except SlackConnectionError:
+                logging.warning("Slack Connection Error: sleeping {} seconds".format(timeout))
+                time.sleep(timeout)
+                timeout = timeout * 2
+                continue
+            except requests.ConnectionError:
+                logging.warning("Slack http Connection Error: sleeping {} seconds".format(timeout))
+                time.sleep(timeout)
+                timeout = timeout * 2
+                continue
+            except ConnectionResetError:
+                logging.warning("Slack http Connection Reset: sleeping {} seconds".format(timeout))
+                time.sleep(timeout)
+                timeout = timeout * 2
+                continue
+            except Exception:
+                logging.warning("Something else went wrong: sleeping {} seconds".format(timeout))
+                logging.warning(sys.exc_info()[0])
+                time.sleep(timeout)
+                timeout = timeout * 2
+                continue
+            else:
+                timeout = 1
+
             if command and channel:
                 active.handle_command(command, channel, user)
             else:
@@ -116,7 +150,7 @@ def main(test = False):
             if test:
                 return True
     else:
-        print("connection failed, invalid slack token or bot id?")
+        logging.error("connection failed, invalid slack token or bot id?")
         return False
 
 
