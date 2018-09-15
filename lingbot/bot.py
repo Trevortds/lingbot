@@ -18,6 +18,7 @@ from lingbot.features import ai
 from lingbot.features import generic_schedule_reader
 from lingbot import passive_feats, active_feats
 
+logging.getLogger().setLevel(logging.INFO)
 
 try:
     with open("api.txt", 'r') as f:
@@ -111,6 +112,8 @@ def main(test = False):
             # do this only if you're not testing. got really spammy. 
             send_message(bot_test, "Lingbot started at " + str(start_time.strftime("%A, %d. %B %Y %I:%M%p")) + "\n version " + str(version_number))
         while True:
+            if timeout != 1:
+                send_message(bot_test, "Something went wrong, please check the logs")
             try:
                 command, channel, user = parse_slack_output(
                     slack_client.rtm_read())
@@ -131,6 +134,7 @@ def main(test = False):
                 continue
             except Exception:
                 logging.warning("Something else went wrong: sleeping {} seconds".format(timeout))
+                logging.warning(sys.exc_info()[0])
                 time.sleep(timeout)
                 timeout = timeout * 2
                 continue
