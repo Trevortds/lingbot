@@ -114,7 +114,8 @@ class Reminder():
                 # nlprg evening reminder
                 response = ("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
                             "\n(food and coffee provided, like for free, so come)\n\n"
-                            "")
+                            "Hangouts link: https://hangouts.google.com/hangouts/_/calendar/bnIwaGdjdXE0NHJxM2djM2N1aj"
+                            "JlbTNham9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ.67iqbqs7pvf574rfl9ugbc483b?authuser=0")
                 return response, True
 
             elif now.date() == self.next_nlprg.date and \
