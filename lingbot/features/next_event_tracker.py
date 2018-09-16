@@ -13,7 +13,7 @@ class NextEvent:
             self.update()
         def update(self):
             self.next_generic = generic_schedule_reader.get_next(self.config["filename"])
-            self.next_nlprg = nlprg_schedule_reader.nlprg_meeting()
+            self.next_nlprg = nlprg_schedule_reader.nlprg_meeting(self.config["nlprg_url"])
         def handle(self, command, channel, user):
             response = ""
             if self.next_generic is None:

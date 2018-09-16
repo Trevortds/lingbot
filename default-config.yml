@@ -21,6 +21,7 @@ features:
       active: True
       command: "next"
       filename: "generic_schedule.csv"
+      nlprg_url: "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
     addEvent:
       active: True
       command: "add event"
