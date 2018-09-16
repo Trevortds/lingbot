@@ -4,9 +4,10 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 
+reader_pattern = r"\|\s*\d+\s*\|\s*(\w+)\s*([\w\s\-\.]*)\s*\|\s*\[(.*?)\]\((.*?)\)(?:\s*<br>\s*\[(.*?)\]\((.*?)\))?\s*\|\s*(\d+)/(\d+)/(\d+)"
+
 
 class nlprg_meeting():
-    reader_pattern = r"\|\s*\d+\s*\|\s*(\w+)\s*([\w\s\-\.]*)\s*\|\s*\[(.*?)\]\((.*?)\)(?:\s*<br>\s*\[(.*?)\]\((.*?)\))?\s*\|\s*(\d+)/(\d+)/(\d+)"
     # regex parser for reading schedule table
     # matches lines of the form
     # |1 | Firstname lastname | [nameofpaper](link) | m/d/y | GS 906 |
@@ -20,7 +21,6 @@ class nlprg_meeting():
     # 5. month
     # 6. day
     # 7. year
-    schedule_loc = "https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md"
     firstname = ''
     lastname = ''
     papername = ''
@@ -34,7 +34,8 @@ class nlprg_meeting():
     paperinfo = ''
     date = datetime.datetime.today()  # this is soon overwritten
 
-    def __init__(self, schedule_loc=schedule_loc, reader_pattern=reader_pattern):
+    def __init__(self, schedule_loc="https://raw.githubusercontent.com/wiki/clulab/nlp-reading-group/Fall-2017-Reading-Schedule.md",
+                 reader_pattern=reader_pattern):
         '''
         creates a meeting based on the information in the
             schedule file provided
