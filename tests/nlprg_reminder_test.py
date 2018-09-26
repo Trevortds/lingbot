@@ -107,4 +107,4 @@ def test_check_last_minute(patch_datetime_last_minute):
     assert FAKE_TIME_LAST_MINUTE == FAKE_TIME_LAST_MINUTE.replace(hour=13, minute=45, second=0)
     assert patch_datetime_last_minute.check() == (("NLP Reading Group happening NOW! :book: Gould-Simpson 906"
                             "\n(food and coffee provided, like for free, so come)\n\n"
-                            ""), True)
+                            "Zoom link: https://arizona.zoom.us/meeting/427671264/ics?icsToken=04ac4efd24ef92c0545ab198b0706a234d948da382627f7157ef26ee9914cee2?authuser=0"), True)
