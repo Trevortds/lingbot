@@ -11,7 +11,7 @@ import re
 import yaml
 import logging
 
-from slackclient._server import SlackConnectionError
+from slackclient.server import SlackConnectionError
 
 from lingbot.features.nlprg_schedule_reader import nlprg_meeting
 from lingbot.features import ai
@@ -119,25 +119,36 @@ def main(test = False):
                 command, channel, user = parse_slack_output(
                     slack_client.rtm_read())
             except SlackConnectionError:
-                logging.warning("Slack Connection Error: sleeping {} seconds".format(timeout))
-                time.sleep(timeout)
-                timeout = timeout * 2
+                if slack_client.rtm_connect():
+                    logging.warning("Slack Connection Error: recovered after {}".format(timeout))
+                else:
+                    logging.warning("Slack Connection Error: sleeping {} seconds".format(timeout))
+                    time.sleep(timeout)
+                    timeout = timeout * 2
                 continue
             except requests.ConnectionError:
-                logging.warning("Slack http Connection Error: sleeping {} seconds".format(timeout))
-                time.sleep(timeout)
-                timeout = timeout * 2
+                if slack_client.rtm_connect():
+                    logging.warning("Http Connection Error: recovered after {}".format(timeout))
+                else:
+                    logging.warning("Http Connection Error: sleeping {} seconds".format(timeout))
+                    time.sleep(timeout)
+                    timeout = timeout * 2
                 continue
             except ConnectionResetError:
-                logging.warning("Slack http Connection Reset: sleeping {} seconds".format(timeout))
-                time.sleep(timeout)
-                timeout = timeout * 2
+                if slack_client.rtm_connect():
+                    logging.warning("Http Connection Error: recovered after {}".format(timeout))
+                else:
+                    logging.warning("Http Connection Error: sleeping {} seconds".format(timeout))
+                    time.sleep(timeout)
+                    timeout = timeout * 2
                 continue
             except Exception:
-                logging.warning("Something else went wrong: sleeping {} seconds".format(timeout))
-                logging.warning(sys.exc_info()[0])
-                time.sleep(timeout)
-                timeout = timeout * 2
+                if slack_client.rtm_connect():
+                    logging.warning("Unknown Error: recovered after {}".format(timeout))
+                else:
+                    logging.warning("Unknown Error: sleeping {} seconds".format(timeout))
+                    time.sleep(timeout)
+                    timeout = timeout * 2
                 continue
             else:
                 timeout = 1
