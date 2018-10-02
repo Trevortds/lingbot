@@ -11,7 +11,7 @@ import re
 import yaml
 import logging
 
-from slackclient.server import SlackConnectionError
+from slackclient._server import SlackConnectionError
 
 from lingbot.features.nlprg_schedule_reader import nlprg_meeting
 from lingbot.features import ai
